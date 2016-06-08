@@ -25,32 +25,44 @@
 <h2>My Map</h2>
 </div>
 
+
+
     <script>
 
       function initMap() {
-
         var myLatLng = {lat: -25.363, lng: 131.044};
 
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 1,
+          zoom: 4,
           center: myLatLng
         });
 
-        <% if (results) { %>
+        var mapPoints;
+        <% if (typeof(results) !== 'undefined') { %>
+          mapPoints = <%= results %>
+        <% } else { %>
+          mapPoints = 0;
+        <% } %>
+
+        if (mapPoints) {
           var markers = [];
-          var n = 0;
-          <% results.forEach(function(r) { %>
-            markers[n] = new google.maps.Marker({
-              position: {lat: <%= r.lat %>, lng: <%= r.lon %>};,
+          for (var i = 0; i < results.length; i++) {
+            markers[i] = new google.maps.Marker({
+              position: myLatLng,
               map: map,
-              title: <%= r.name %>
+              title: 'Hello World!'
             });
-            n++;
-          <% }); %>
-        } %>
+          }
+        } else {
+          var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: map,
+            title: 'Hello World!'
+          });
+        }
 
       }
-      
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap">
