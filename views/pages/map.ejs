@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+</head>
+
+<body>
+
+<% include ../partials/nav.ejs %>
+
+
+<div id="map">
+<h2>My Map</h2>
+</div>
+
+    <script>
+
+      function initMap() {
+
+        var myLatLng = {lat: -25.363, lng: 131.044};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 1,
+          center: myLatLng
+        });
+
+        <% if (results) { %>
+          var markers = [];
+          var n = 0;
+          <% results.forEach(function(r) { %>
+            markers[n] = new google.maps.Marker({
+              position: {lat: <%= r.lat %>, lng: <%= r.lon %>};,
+              map: map,
+              title: <%= r.name %>
+            });
+            n++;
+          <% }) %>
+        } %>
+
+
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap">
+    </script>
+
+</body>
+</html>
