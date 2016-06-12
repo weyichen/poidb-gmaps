@@ -27,44 +27,39 @@
     <script>
 
       function initMap() {
-
-        var myLatLng = {lat: -25.363, lng: 131.044};
-
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 4,
-          center: myLatLng
+          center: {lat: -25.363, lng: 131.044}
         });
 
-        var mapPoints = [{name: 'Uluru (Ayers Rock)', lat: -25.363, lon: 131.044}];
-
+        var mapPoints = [{name: 'Uluru (Ayers Rock)', lat: -25.363, lon: 131.044}, {name: 'Sydney Opera House', lat: -33.8568, lon: 151.2153}];
         <% if (results) { %>
           mapPoints = <%- JSON.stringify(results) %>;
         <% } %>
 
-        var markers = infoWindows = [];
+        var marker;
+        var infoWindow = new google.maps.InfoWindow();
         var n = 0;
         mapPoints.forEach(function(r) {
-          infoWindows[n] = new google.maps.InfoWindow({
-            content: r.name
-          });
 
-          markers[n] = new google.maps.Marker({
+          marker = new google.maps.Marker({
             position: {lat: r.lat, lng: r.lon},
             map: map,
             title: r.name
           });
 
-          markers[n].addListener('click', function() {
-            infoWindows[n].open(map, markers[n]);
+          infoWindow = new google.maps.InfoWindow({
+            content: r.name
           });
 
-          n++;
+          google.maps.event.addListener(marker, 'click', (function(marker) {
+            return function() {
+              infoWindow.setContent(r.name);
+              infoWindow.open(map, marker);
+            }
+          })(marker));
+
         });
-
-        // add info windows to markers
-        for (var i = 0; i < markers.length; i++) {
-
-        }
 
         map.addListener('click', function(e) {
           placeMarkerAndPanTo(e.latLng, map);
