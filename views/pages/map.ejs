@@ -39,20 +39,21 @@
 
         var mapPoints;
         <% if (typeof(results) !== 'undefined') { %>
-          mapPoints = <%= results %>
+          mapPoints = <%- JSON.stringify(results) %>;
         <% } else { %>
           mapPoints = 0;
         <% } %>
 
         if (mapPoints) {
           var markers = [];
-          for (var i = 0; i < results.length; i++) {
-            markers[i] = new google.maps.Marker({
-              position: myLatLng,
+          var n = 0;
+          mapPoints.forEach(function(r) {
+            markers[n++] = new google.maps.Marker({
+              position: {lat: r.lat, lng: r.lon},
               map: map,
-              title: 'Hello World!'
+              title: r.name
             });
-          }
+          });
         } else {
           var marker = new google.maps.Marker({
             position: myLatLng,
