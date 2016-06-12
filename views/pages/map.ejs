@@ -20,16 +20,14 @@
 
 <% include ../partials/nav.ejs %>
 
-
 <div id="map">
 <h2>My Map</h2>
 </div>
 
-
-
     <script>
 
       function initMap() {
+
         var myLatLng = {lat: -25.363, lng: 131.044};
 
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -37,37 +35,54 @@
           center: myLatLng
         });
 
-        var mapPoints;
-        <% if (typeof(results) !== 'undefined') { %>
+        var mapPoints = [{name: 'Uluru (Ayers Rock)', lat: -25.363, lon: 131.044}];
+
+        <% if (results) { %>
           mapPoints = <%- JSON.stringify(results) %>;
-        <% } else { %>
-          mapPoints = 0;
         <% } %>
 
-        if (mapPoints) {
-          var markers = [];
-          var n = 0;
-          mapPoints.forEach(function(r) {
-            markers[n++] = new google.maps.Marker({
-              position: {lat: r.lat, lng: r.lon},
-              map: map,
-              title: r.name
-            });
+        var markers = infoWindows = [];
+        var n = 0;
+        mapPoints.forEach(function(r) {
+          infoWindows[n] = new google.maps.InfoWindow({
+            content: r.name
           });
-        } else {
-          var marker = new google.maps.Marker({
-            position: myLatLng,
+
+          markers[n] = new google.maps.Marker({
+            position: {lat: r.lat, lng: r.lon},
             map: map,
-            title: 'Hello World!'
+            title: r.name
           });
+
+          markers[n].addListener('click', function() {
+            infoWindows[n].open(map, markers[n]);
+          });
+
+          n++;
+        });
+
+        // add info windows to markers
+        for (var i = 0; i < markers.length; i++) {
+
         }
 
+        map.addListener('click', function(e) {
+          placeMarkerAndPanTo(e.latLng, map);
+        });
+
+      }
+
+      function placeMarkerAndPanTo(latLng, map) {
+        var marker = new google.maps.Marker({
+         position: latLng,
+         map: map
+       });
+       map.panTo(latLng);
       }
 
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap">
     </script>
-
 </body>
 </html>

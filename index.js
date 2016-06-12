@@ -8,7 +8,8 @@ pg.defaults.ssl = true;
 
 app.set('port', (process.env.PORT || 5000));
 
-app.use(stormpath.init(app, { website: true }));
+app.use(stormpath.init(app, { cache: 'memory' }));
+
 app.use(express.static(__dirname + '/public'));
 
 // views is directory for all template files
@@ -67,6 +68,27 @@ app.get('/map', function (request, response) {
           response.render('pages/map', {results: result.rows} );
         }
     });
+  }
+});
+})
+
+app.get('/usermap', stormpath.loginRequired, function (request, response) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    if (err) {
+      console.error(err);
+      response.render('pages/map');
+    }
+    else {
+      request.user.getCustomData(function(err, data) {
+        if (err) {
+          console.error(err); response.send("Error " + err);
+        }
+        else if (data.mappoints){
+          response.render('pages/map', {results: data.mappoints} );
+        } else {
+          response.render('pages/map', {results: null});
+        }
+      })
   }
 });
 })
