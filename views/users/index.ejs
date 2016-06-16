@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+
+<body>
+
+  <% include ../partials/nav.ejs %>
+
+  <table>
+    <% users.forEach(function(user) { %>
+      <tr>
+        <td><%= user.name %></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><%= user.email %></td>
+      </tr>
+    <% }) %>
+  </table>
+
+</body>
+
+</html>
