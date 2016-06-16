@@ -15,16 +15,12 @@ users[1] = new User({
   email: 'tobi@vision-media.ca'
 });
 
-exports.populate = function() {
-  for (var i = 0; i < users.length; i++) {
-    users[i].save(function(err) {
-      if (err) throw err;
-
-      console.log(users[i].name + " created!");
-    });
-  }
-
-}
+exports.populate = function(req, res) {
+  User.create(users, function (err, addedUsers) {
+    if (err) throw err;
+    res.redirect('back');
+  });
+};
 
 exports.list = function(req, res){
   User.find({}, function(err, users) {
@@ -37,6 +33,8 @@ exports.list = function(req, res){
 exports.create = function(req, res) {
 
 };
+
+
 
 
 
@@ -73,4 +71,11 @@ exports.update = function(req, res){
   req.user.name = user.name;
   req.user.email = user.email;
   res.redirect('back');
+};
+
+exports.exterminate = function(req, res){
+  User.remove({}, function (err) {
+    if (err) throw err;
+    res.redirect('back');
+  });
 };

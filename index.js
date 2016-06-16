@@ -10,10 +10,8 @@ app.set('dbmode', process.env.DBMODE);
 var db, mongoose, pg, stormpath;
 if (app.get('dbmode') === 'mongodb') {
   mongoose = require('mongoose');
-  mongoose.connect(process.env.MONGODB_URI);
-  db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function() {
+  mongoose.connect(process.env.MONGODB_URI, function (err) {
+    if (err) { console.log(err); return; }
     console.log("connected to mongodb!");
   });
 }
@@ -71,23 +69,7 @@ app.get('/db', function (request, response) {
 })
 
 app.get('/map', function (request, response) {
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    if (err) {
-      console.error(err);
-      response.render('pages/map');
-    }
-    else {
-      client.query('SELECT * FROM map', function(err, result) {
-        done();
-        if (err) {
-          console.error(err); response.send("Error " + err);
-        }
-        else {
-          response.render('pages/map', {results: result.rows} );
-        }
-    });
-  }
-});
+
 })
 
 // app.get('/usermap', stormpath.loginRequired, function (request, response) {
@@ -118,6 +100,9 @@ app.get('/user/:id', user.view);
 app.get('/user/:id/view', user.view);
 app.get('/user/:id/edit', user.edit);
 app.put('/user/:id/edit', user.update);
+
+app.get('/populate', user.populate);
+app.get('/exterminate', user.exterminate);
 
 // app.on('stormpath.ready', function() {
 //   app.listen(app.get('port'), function() {
