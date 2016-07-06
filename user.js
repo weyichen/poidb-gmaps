@@ -18,7 +18,7 @@ users[1] = new User({
 exports.populate = function(req, res) {
   User.create(users, function (err, addedUsers) {
     if (err) throw err;
-    res.redirect('back');
+    res.redirect('/users');
   });
 };
 
@@ -34,25 +34,29 @@ exports.create = function(req, res) {
 
 };
 
-
-
+exports.testfn = function(msg) {
+  console.log(msg);
+};
 
 
 exports.load = function(req, res, next){
-  var id = req.params.id;
-  req.user = users[id];
-  if (req.user) {
-    next();
-  } else {
-    var err = new Error('cannot find user ' + id);
-    err.status = 404;
-    next(err);
-  }
+  User.findById(req.params.id, function(err, user) {
+
+    req.user = user;
+    if (req.user) {
+      console.log(req.params.id);
+      next();
+    } else {
+      var err = new Error('cannot find user ' + id);
+      err.status = 404;
+      next(err);
+    }
+  });
 };
 
 exports.view = function(req, res){
   res.render('users/view', {
-    title: 'Viewing user ' + req.user.name,
+    title: 'Viewing user ' + req.user.username,
     user: req.user
   });
 };
@@ -76,6 +80,6 @@ exports.update = function(req, res){
 exports.exterminate = function(req, res){
   User.remove({}, function (err) {
     if (err) throw err;
-    res.redirect('back');
+    res.redirect('/users');
   });
 };
