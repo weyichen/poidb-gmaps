@@ -1,0 +1,39 @@
+* means to-do
+
+& Hosting
+Heroku
+Getting started with Node.js on Heroku
+
+& Back-End
+Node.js
+
+Express.js
+  Session Middleware
+  https://github.com/expressjs/session
+  Connect Flash Middleware
+  https://github.com/jaredhanson/connect-flash
+  Access app instance from a different file
+  http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
+
+Passport
+  Local Strategy
+  https://github.com/passport/express-4.x-local-example
+  Local Strategy with Mongoose
+  http://code.tutsplus.com/tutorials/authenticating-nodejs-applications-with-passport--cms-21619
+  *Facebook Strategy
+  https://github.com/jaredhanson/passport-facebook
+
+
+& Database
+MongoDB (mLab)
+Mongoose
+  http://mongoosejs.com/docs/models.html
+  https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
+
+& Front-End
+EJS
+  https://github.com/mde/ejs
+Bootstrap
+
+& Data
+Google Maps JS API

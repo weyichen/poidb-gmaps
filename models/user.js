@@ -24,7 +24,7 @@ userSchema.pre('save', function(next) {
   this.password = bcrypt.hashSync(this.password);
 
   next();
-})
+});
 
 var User = mongoose.model('User', userSchema);
 

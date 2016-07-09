@@ -1,4 +1,4 @@
-var User = require('./models/user');
+var User = require('../models/user');
 
 // Fake user database
 var users = [];
@@ -17,7 +17,12 @@ users[1] = new User({
 
 exports.populate = function(req, res) {
   User.create(users, function (err, addedUsers) {
-    if (err) throw err;
+    if (err) {
+      if (err.code === 11000) // handle duplicates
+        console.log('username already exists! ignoring...');
+      else
+        throw err;
+    }
     res.redirect('/users');
   });
 };
@@ -30,24 +35,14 @@ exports.list = function(req, res){
   });
 };
 
-exports.create = function(req, res) {
-
-};
-
-exports.testfn = function(msg) {
-  console.log(msg);
-};
-
-
 exports.load = function(req, res, next){
   User.findById(req.params.id, function(err, user) {
-
     req.user = user;
     if (req.user) {
       console.log(req.params.id);
       next();
     } else {
-      var err = new Error('cannot find user ' + id);
+      var err = new Error('cannot find user ' + req.params.id);
       err.status = 404;
       next(err);
     }

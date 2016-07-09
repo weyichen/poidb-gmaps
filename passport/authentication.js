@@ -24,11 +24,28 @@ module.exports = function(passport) {
         if (err)
           return done(err);
         if (!user)
-          return done(null, false, {message: 'You are not yet registered!'});
+          return done(null, false, req.flash('warning', 'You are not yet registered!'));
         if (!bcrypt.compareSync(password, user.password))
-          return done(null, false, {message: 'Incorrect password.'});
-        return done(null, user, {message: 'logged in as' + user.username});
+          return done(null, false, req.flash('danger', 'You password is incorrect! Please try again.'));
+        return done(null, user, req.flash('success', 'Logged in as ' + user.username));
       });
     }
   ));
+
+  passport.use('signup', new LocalStrategy({
+    passReqToCallback: true
+  },
+    function(req, username, password, done) {
+      // first check if user already exists
+      console.log("authenticating as " + username);
+      User.create({ 'username': username, 'password': password }, function (err, user) {
+        if (err.code === 11000) // handle duplicates
+          return done(null, false, req.flash('warning', 'This username has been taken! Please try another!'));
+        if (err)
+          return done(err);
+        return done(null, user, req.flash('success', 'Registered as ' + user.username));
+      });
+    }
+  ));
+
 }
