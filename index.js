@@ -39,7 +39,7 @@ var userRoutes = require('./user/routes');
 app.use(userRoutes);
 
 // set up passport strategies and authentication routes
-var passportAuth = require('./passport/authentication');
+var passportAuth = require('./passport/passport');
 passportAuth(passport);
 var authRoutes = require('./passport/routes');
 authRoutes(passport);
@@ -63,7 +63,7 @@ app.get('/', function(request, response) {
 
 
 app.get('/map', function (request, response) {
-
+  response.render('pages/map');
 });
 
 app.get('/debug', function (request, response) {

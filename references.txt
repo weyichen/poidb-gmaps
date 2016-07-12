@@ -26,6 +26,7 @@ Passport
 
 & Database
 MongoDB (mLab)
+  https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/
 Mongoose
   http://mongoosejs.com/docs/models.html
   https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications

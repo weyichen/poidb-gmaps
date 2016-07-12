@@ -33,7 +33,7 @@
         });
 
         var mapPoints = [{name: 'Uluru (Ayers Rock)', lat: -25.363, lon: 131.044}, {name: 'Sydney Opera House', lat: -33.8568, lon: 151.2153}];
-        <% if (results) { %>
+        <% if (locals.results) { %>
           mapPoints = <%- JSON.stringify(results) %>;
         <% } %>
 
