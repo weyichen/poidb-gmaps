@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var flash = require('connect-flash');
 
@@ -11,10 +12,6 @@ app.set('dbmode', process.env.DBMODE);
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
 
 // setup appropriate database for local or Heroku
 var db, mongoose, pg, stormpath;
@@ -34,6 +31,22 @@ else if (app.get('dbmode') === 'stormpath'){
   // app.use(stormpath.init(app, { cache: 'memory' }));
 }
 
+app.use(session({
+  secret: 'keyboard cat',
+  cookie : {
+    maxAge: 3600000
+  },
+  store: new MongoStore({mongooseConnection:mongoose.connection}),
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
+
+var User = require('./models/user');
+
 var user = require('./user/user');
 var userRoutes = require('./user/routes');
 app.use(userRoutes);
@@ -48,6 +61,12 @@ authRoutes(passport);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+app.use(function(request, response, next) {
+  if (request.user)
+    app.locals.username = request.user.username;
+  next();
+});
+
 // triage any flash messages
 app.use(function(request, response, next) {
   var flash = request.flash();
@@ -57,13 +76,53 @@ app.use(function(request, response, next) {
   next();
 });
 
+// DEBUG - log stuff
+app.use(function(req, res, next) {
+  //console.log(req.session);
+  next();
+});
+
 app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
 
-app.get('/map', function (request, response) {
-  response.render('pages/map');
+app.get('/map', function (req, res) {
+  if (!req.session.passport) {
+    req.flash('info', 'Log in to view your saved map locations!');
+    res.render('pages/map');
+  }
+
+  else {
+    User.findById(req.session.passport.user, function(err, user) {
+      if (user) {
+        res.render('pages/map', {locations: user.locations});
+      }
+
+      else {
+        req.flash('error', 'cannot find user ' + req.params.id);
+        res.render('pages/map');
+      }
+    });
+  }
+});
+
+app.get('/addmappoint', function (req, res) {
+  User.findById(req.session.passport.user, function(err, user) {
+    if (user) {
+      user.locations.push({ title: 'Sample Point', lat: 0, lng: 0 });
+      user.save(function (err) {
+        if (err) return handleError(err)
+        console.log('Success!');
+        res.redirect('/map');
+      });
+    } else {
+      var err = new Error('cannot find user ' + req.params.id);
+      err.status = 404;
+      next(err);
+    }
+  });
+
 });
 
 app.get('/debug', function (request, response) {

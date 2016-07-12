@@ -1,6 +1,6 @@
 var app = require('../index');
 
-// routes below are redirected to login page if no user is logged in
+// redirect routes to login page if no user is logged in
 var isAuthenticated = function(request, response, next) {
   if (request.isAuthenticated())
     return next();
@@ -31,7 +31,6 @@ module.exports = function(passport) {
                 failureFlash: true }
   ));
   app.get('/loginsuccess', function(request, response) {
-    app.locals.username = request.user.username;
     response.redirect('/user/' + request.session.passport.user);
   });
 

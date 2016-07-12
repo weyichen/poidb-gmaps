@@ -32,9 +32,9 @@
           center: {lat: -25.363, lng: 131.044}
         });
 
-        var mapPoints = [{name: 'Uluru (Ayers Rock)', lat: -25.363, lon: 131.044}, {name: 'Sydney Opera House', lat: -33.8568, lon: 151.2153}];
-        <% if (locals.results) { %>
-          mapPoints = <%- JSON.stringify(results) %>;
+        var mapPoints = [{title: 'Uluru (Ayers Rock)', lat: -25.363, lng: 131.044}, {title: 'Sydney Opera House', lat: -33.8568, lng: 151.2153}];
+        <% if (locals.locations) { %>
+          mapPoints = <%- JSON.stringify(locations) %>;
         <% } %>
 
         var marker;
@@ -43,18 +43,18 @@
         mapPoints.forEach(function(r) {
 
           marker = new google.maps.Marker({
-            position: {lat: r.lat, lng: r.lon},
+            position: {lat: r.lat, lng: r.lng},
             map: map,
-            title: r.name
+            title: r.title
           });
 
           infoWindow = new google.maps.InfoWindow({
-            content: r.name
+            content: r.title
           });
 
           google.maps.event.addListener(marker, 'click', (function(marker) {
             return function() {
-              infoWindow.setContent(r.name);
+              infoWindow.setContent(r.title);
               infoWindow.open(map, marker);
             }
           })(marker));
@@ -76,8 +76,7 @@
       }
 
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap">
     </script>
 </body>
 </html>
