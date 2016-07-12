@@ -31,7 +31,8 @@ module.exports = function(passport) {
                 failureFlash: true }
   ));
   app.get('/loginsuccess', function(request, response) {
-    response.redirect('/user/' + request.session.passport.user);
+    // upon successful authentication req.user contains the authenticated user
+    response.redirect('/user/' + request.user._id);
   });
 
   app.get('/logout', function(request, response) {
@@ -41,7 +42,7 @@ module.exports = function(passport) {
   });
 
   app.get('/profile', isAuthenticated, function(request, response) {
-    response.redirect('/user/' + request.session.passport.user);
+    response.redirect('/user/' + request.user._id);
   });
 
   return app;

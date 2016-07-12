@@ -10,8 +10,9 @@ app.set('port', (process.env.PORT || 5000));
 app.set('local', 'LOCAL' in process.env);
 app.set('dbmode', process.env.DBMODE);
 
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: true }));
+// views is directory for all template files
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
 // setup appropriate database for local or Heroku
 var db, mongoose, pg, stormpath;
@@ -31,6 +32,9 @@ else if (app.get('dbmode') === 'stormpath'){
   // app.use(stormpath.init(app, { cache: 'memory' }));
 }
 
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(session({
   secret: 'keyboard cat',
   cookie : {
@@ -45,6 +49,32 @@ app.use(passport.session());
 
 app.use(flash());
 
+// get username for rendering
+app.use(function(request, response, next) {
+  if (request.user)
+    app.locals.username = request.user.username;
+  next();
+});
+
+// triage any flash messages
+app.use(function(request, response, next) {
+  var flash = request.flash();
+  for (var grade in flash) {
+    response.locals[grade+'Msgs'] = flash[grade].join('\n');
+  }
+  next();
+});
+
+// DEBUG - log stuff
+app.use(function(req, res, next) {
+  console.log('testing 123');
+  next();
+});
+
+// ^^^ MIDDLEWARE ^^^
+// place all middleware before all routes
+// ***   ROUTES   ***
+
 var User = require('./models/user');
 
 var user = require('./user/user');
@@ -57,44 +87,20 @@ passportAuth(passport);
 var authRoutes = require('./passport/routes');
 authRoutes(passport);
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-
-app.use(function(request, response, next) {
-  if (request.user)
-    app.locals.username = request.user.username;
-  next();
-});
-
-// triage any flash messages
-app.use(function(request, response, next) {
-  var flash = request.flash();
-  for (var grade in flash) {
-    response.locals[grade+'Msgs'] = flash[grade].join('<br>');
-  }
-  next();
-});
-
-// DEBUG - log stuff
-app.use(function(req, res, next) {
-  //console.log(req.session);
-  next();
-});
-
 app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
 
 app.get('/map', function (req, res) {
-  if (!req.session.passport) {
+  if (!req.user) {
+    console.log("here!")
     req.flash('info', 'Log in to view your saved map locations!');
     res.render('pages/map');
   }
 
   else {
-    User.findById(req.session.passport.user, function(err, user) {
+    User.findById(req.user._id, function(err, user) {
       if (user) {
         res.render('pages/map', {locations: user.locations});
       }
@@ -108,7 +114,7 @@ app.get('/map', function (req, res) {
 });
 
 app.get('/addmappoint', function (req, res) {
-  User.findById(req.session.passport.user, function(err, user) {
+  User.findById(req.user._id, function(err, user) {
     if (user) {
       user.locations.push({ title: 'Sample Point', lat: 0, lng: 0 });
       user.save(function (err) {
@@ -125,10 +131,10 @@ app.get('/addmappoint', function (req, res) {
 
 });
 
-app.get('/debug', function (request, response) {
-  console.log(request.user);
-  console.log(request.session);
-  response.redirect('/');
+app.get('/debug', function (req, res) {
+  //var debug = JSON.stringify(req);
+  console.log(req);
+  res.render('pages/debug');
 });
 
 // User

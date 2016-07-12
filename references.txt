@@ -16,6 +16,8 @@ Express.js
   http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
   Express Session Stores
   http://stackoverflow.com/questions/23260676/express-4-sessions-not-persisting-when-restarting-server
+  Connect-Mongo
+  https://github.com/kcbanner/connect-mongo
 
 Passport
   Local Strategy

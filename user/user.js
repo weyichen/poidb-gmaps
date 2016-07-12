@@ -37,8 +37,8 @@ exports.list = function(req, res){
 
 exports.load = function(req, res, next){
   User.findById(req.params.id, function(err, user) {
-    req.user = user;
-    if (req.user) {
+    req.lookupUser = user;
+    if (req.lookupUser) {
       console.log(req.params.id);
       next();
     } else {
@@ -51,15 +51,15 @@ exports.load = function(req, res, next){
 
 exports.view = function(req, res){
   res.render('users/view', {
-    title: 'Viewing user ' + req.user.username,
-    user: req.user
+    title: 'Viewing user ' + req.lookupUser.username,
+    user: req.lookupUser
   });
 };
 
 exports.edit = function(req, res){
   res.render('users/edit', {
-    title: 'Editing user ' + req.user.name,
-    user: req.user
+    title: 'Editing user ' + req.lookupUser.name,
+    user: req.lookupUser
   });
 };
 
@@ -67,8 +67,8 @@ exports.update = function(req, res){
   // Normally you would handle all kinds of
   // validation and save back to the db
   var user = req.body.user;
-  req.user.name = user.name;
-  req.user.email = user.email;
+  req.lookupUser.name = user.name;
+  req.lookupUser.email = user.email;
   res.redirect('back');
 };
 
