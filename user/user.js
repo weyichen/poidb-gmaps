@@ -63,14 +63,38 @@ exports.edit = function(req, res){
   });
 };
 
-exports.update = function(req, res){
-  // Normally you would handle all kinds of
-  // validation and save back to the db
-  var user = req.body.user;
-  req.lookupUser.name = user.name;
-  req.lookupUser.email = user.email;
-  res.redirect('back');
+exports.update = function(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    if (user) {
+      for (var property in req.body) {
+        if (req.body[property])
+          user[property] = req.body[property];
+      }
+      user.save(function(error) {
+        if (error) {
+          req.flash('error', error.errmsg);
+          console.log(error.errmsg);
+        }
+        else
+          console.log('edited user ' + user.username);
+        res.redirect('back');
+      }); // ISSUE:  Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html
+    }
+  });
+
 };
+
+exports.delete = function(req, res) {
+  User.findByIdAndRemove(req.params.id, function(error, user) {
+    if (error) {
+      req.flash('error', error.errmsg);
+      console.log(error.errmsg);
+    }
+    else
+      console.log('deleted user ' + user.username);
+    res.redirect('/');
+  });
+}
 
 exports.exterminate = function(req, res){
   User.remove({}, function (err) {

@@ -39,10 +39,11 @@ module.exports = function(passport) {
       // first check if user already exists
       console.log("authenticating as " + username);
       User.create({ 'username': username, 'password': password }, function (err, user) {
-        if (err.code === 11000) // handle duplicates
-          return done(null, false, req.flash('warning', 'This username has been taken! Please try another!'));
-        if (err)
+        if (err) {
+          if (err.code === 11000) // handle duplicates
+            return done(null, false, req.flash('warning', 'This username has been taken! Please try another!'));
           return done(err);
+        }
         return done(null, user, req.flash('success', 'Registered as ' + user.username));
       });
     }

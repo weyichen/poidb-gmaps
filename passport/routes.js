@@ -30,9 +30,10 @@ module.exports = function(passport) {
                 failureRedirect: '/signup',
                 failureFlash: true }
   ));
-  app.get('/loginsuccess', function(request, response) {
+  app.get('/loginsuccess', function(req, res) {
     // upon successful authentication req.user contains the authenticated user
-    response.redirect('/user/' + request.user._id);
+    req.flash('success', 'Logged in as ' + req.user.username);
+    res.redirect('/user/' + req.user._id);
   });
 
   app.get('/logout', function(request, response) {

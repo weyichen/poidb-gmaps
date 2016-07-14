@@ -32,7 +32,11 @@ else if (app.get('dbmode') === 'stormpath'){
   // app.use(stormpath.init(app, { cache: 'memory' }));
 }
 
+// MIDDLEWARES
+
 app.use(express.static(__dirname + '/public'));
+
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
@@ -67,13 +71,12 @@ app.use(function(request, response, next) {
 
 // DEBUG - log stuff
 app.use(function(req, res, next) {
-  console.log('testing 123');
+
   next();
 });
 
-// ^^^ MIDDLEWARE ^^^
 // place all middleware before all routes
-// ***   ROUTES   ***
+// ROUTES
 
 var User = require('./models/user');
 
@@ -132,12 +135,9 @@ app.get('/addmappoint', function (req, res) {
 });
 
 app.get('/debug', function (req, res) {
-  //var debug = JSON.stringify(req);
-  console.log(req);
+  var debug = "hello!";
   res.render('pages/debug');
 });
-
-// User
 
 
 app.listen(app.get('port'), function() {

@@ -9,31 +9,36 @@ Node.js
 
 Express.js
   Session Middleware
-  https://github.com/expressjs/session
+    https://github.com/expressjs/session
   Connect Flash Middleware
-  https://github.com/jaredhanson/connect-flash
+    https://github.com/jaredhanson/connect-flash
   Access app instance from a different file
-  http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
+    http://stackoverflow.com/questions/10090414/express-how-to-pass-app-instance-to-routes-from-a-different-file
   Express Session Stores
-  http://stackoverflow.com/questions/23260676/express-4-sessions-not-persisting-when-restarting-server
+    http://stackoverflow.com/questions/23260676/express-4-sessions-not-persisting-when-restarting-server
   Connect-Mongo
-  https://github.com/kcbanner/connect-mongo
+    https://github.com/kcbanner/connect-mongo
+  When to PUT vs POST
+    http://stackoverflow.com/questions/630453/put-vs-post-in-rest
+  Body Parser
+    https://www.npmjs.com/package/body-parser
 
 Passport
   Local Strategy
-  https://github.com/passport/express-4.x-local-example
+    https://github.com/passport/express-4.x-local-example
   Local Strategy with Mongoose
-  http://code.tutsplus.com/tutorials/authenticating-nodejs-applications-with-passport--cms-21619
+    http://code.tutsplus.com/tutorials/authenticating-nodejs-applications-with-passport--cms-21619
   *Facebook Strategy
-  https://github.com/jaredhanson/passport-facebook
+    https://github.com/jaredhanson/passport-facebook
 
 
 & Database
 MongoDB (mLab)
-  https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/
+    https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/
 Mongoose
-  http://mongoosejs.com/docs/models.html
-  https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
+    http://mongoosejs.com/docs/models.html
+    http://mongoosejs.com/docs/validation.html
+    https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 
 & Front-End
 EJS
