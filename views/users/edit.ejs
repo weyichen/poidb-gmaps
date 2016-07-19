@@ -17,6 +17,8 @@
         <input type="text" value='<%= user.username %>' name="username"/>
     </div>
     <p>
+
+    <% if (locals.own) { %>
     <div>
       <label>Change Your Password</label>
     </div>
@@ -28,6 +30,8 @@
         <label>Re-Enter Password:</label>
         <input type="password" name="repassword"/>
     </div>
+    <% } %>
+    
     <p>
     <div>
         <label>Name</label>

@@ -44,6 +44,7 @@ module.exports = function(passport) {
             return done(null, false, req.flash('warning', 'This username has been taken! Please try another!'));
           return done(err);
         }
+        //console.log('Registered as ' + user.username);
         return done(null, user, req.flash('success', 'Registered as ' + user.username));
       });
     }

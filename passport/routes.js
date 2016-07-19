@@ -30,10 +30,10 @@ module.exports = function(passport) {
                 failureRedirect: '/signup',
                 failureFlash: true }
   ));
-  app.get('/loginsuccess', function(req, res) {
+  app.get('/loginsuccess', isAuthenticated, function(req, res) {
     // upon successful authentication req.user contains the authenticated user
     req.flash('success', 'Logged in as ' + req.user.username);
-    res.redirect('/user/' + req.user._id);
+    res.redirect('/profile');
   });
 
   app.get('/logout', function(request, response) {
@@ -42,8 +42,20 @@ module.exports = function(passport) {
     response.redirect('/login');
   });
 
-  app.get('/profile', isAuthenticated, function(request, response) {
-    response.redirect('/user/' + request.user._id);
+  app.get('/profile', isAuthenticated, function(req, res) {
+    res.render('users/view', {
+      own: true,
+      title: 'Your Profile',
+      user: req.user
+    });
+  });
+
+  app.get('/editprofile', isAuthenticated, function(req, res) {
+    res.render('users/edit', {
+      own: true,
+      title: 'Edit your profile',
+      user: req.user
+    });
   });
 
   return app;

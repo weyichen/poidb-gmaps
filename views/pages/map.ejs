@@ -10,8 +10,15 @@
         margin: 0;
         padding: 0;
       }
+      div {
+        display: inline-block;
+      }
       #map {
         height: 100%;
+        width: 70%;
+      }
+      #locations {
+        width: 25%;
       }
     </style>
 </head>
@@ -21,7 +28,19 @@
 <% include ../partials/nav.ejs %>
 
 <div id="map">
-<h2>My Map</h2>
+  <h2>My Map</h2>
+</div>
+
+<div id="locations">
+  <% if (locals.locations) { %>
+  <% locations.forEach(function(location) { %>
+    <div>
+      <form>
+        Title <input type=text value=<%= location.title %> >
+      </form>
+    </div>
+  <% }) %>
+  <% } %>
 </div>
 
     <script>
@@ -74,9 +93,8 @@
        });
        map.panTo(latLng);
       }
+    </script>
 
-    </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap">
-    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA&callback=initMap"></script>
 </body>
 </html>

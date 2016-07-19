@@ -71,7 +71,7 @@ app.use(function(request, response, next) {
 
 // DEBUG - log stuff
 app.use(function(req, res, next) {
-
+  console.log("URL: " + req.originalUrl);
   next();
 });
 
@@ -95,44 +95,6 @@ app.get('/', function(request, response) {
 });
 
 
-app.get('/map', function (req, res) {
-  if (!req.user) {
-    console.log("here!")
-    req.flash('info', 'Log in to view your saved map locations!');
-    res.render('pages/map');
-  }
-
-  else {
-    User.findById(req.user._id, function(err, user) {
-      if (user) {
-        res.render('pages/map', {locations: user.locations});
-      }
-
-      else {
-        req.flash('error', 'cannot find user ' + req.params.id);
-        res.render('pages/map');
-      }
-    });
-  }
-});
-
-app.get('/addmappoint', function (req, res) {
-  User.findById(req.user._id, function(err, user) {
-    if (user) {
-      user.locations.push({ title: 'Sample Point', lat: 0, lng: 0 });
-      user.save(function (err) {
-        if (err) return handleError(err)
-        console.log('Success!');
-        res.redirect('/map');
-      });
-    } else {
-      var err = new Error('cannot find user ' + req.params.id);
-      err.status = 404;
-      next(err);
-    }
-  });
-
-});
 
 app.get('/debug', function (req, res) {
   var debug = "hello!";
