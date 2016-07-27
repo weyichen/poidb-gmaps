@@ -1,7 +1,7 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from "@angular/common";
 
-import { UsersComponent } from './users.component';
+import { UsersComponent } from './components/users.component';
 
 const routes: RouterConfig = [
   {

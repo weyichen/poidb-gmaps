@@ -1,37 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { User } from './user';
+//import { User } from '../user';
 // import { HeroDetailComponent } from './hero-detail.component';
-import { UserService } from './user.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'my-users',
-  templateUrl: 'client/app/users.component.html',
+  templateUrl: 'client/components/users.component.html',
   // styleUrls: ['client/app/users.component.css'],
   // directives: [HeroDetailComponent]
 })
 export class UsersComponent implements OnInit {
-  users: User[];
+  users: Object[];
   // addingHero: boolean;
-  selectedUser: User;
+  selectedUser: Object;
   error: any;
 
   constructor(
     private userService: UserService,
     private router: Router) {
-
-      this.users = [new User('1', 'tj', 'tj@tj.com')]
     };
 
     getUsers() {
       this.userService.getUsers()
       .then(users => {
-        this.users = [];
-        for (var u in users) {
-          this.users.push(new User(users[u].id, users[u].username, users[u].email));
-        }
-        //this.heroes = heroes;
+        this.users = users;
+        // for (var u in users) {
+        //   console.log(users[u]);
+        //   this.users.push(new User(users[u]._id, users[u].username, users[u].email));
+        // }
       })
     }
 
@@ -39,6 +37,7 @@ export class UsersComponent implements OnInit {
       this.userService.getUser(id)
       .then(user => this.selectedUser = user);
     }
+
 
 
   // addHero() {
@@ -67,7 +66,7 @@ export class UsersComponent implements OnInit {
     this.getUser('5779388944f73c5d33cd5fa7');
   }
 
-  // onSelect(user: User) { this.selectedUser = user; }
+  onSelect(user: Object) { this.selectedUser = user; }
 
   // gotoDetail() {
   //   this.router.navigate(['/detail', this.selectedHero.id]);

@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app.component';
 
 import { async, inject } from '@angular/core/testing';
 

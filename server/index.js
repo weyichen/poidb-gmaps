@@ -100,7 +100,7 @@ app.get('/debug', function (req, res) {
 
 app.get('/', function(req, res) {
   res.sendFile('index.html', {root: __dirname + '/../public/'});
-})
+});
 
 // bottom catch-all to redirect all Angular app routes to the Angular router
 app.get('*', function(req, res) {
