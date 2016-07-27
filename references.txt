@@ -33,16 +33,22 @@ Passport
 
 
 & Database
-MongoDB (mLab)
+MongoDB
     https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/
+    https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+mLab
+
 Mongoose
     http://mongoosejs.com/docs/models.html
     http://mongoosejs.com/docs/validation.html
     https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 
 & Front-End
-EJS
-  https://github.com/mde/ejs
+Angular 2
+  https://angular.io/docs/ts/latest/
+  Integrating Angular and Express
+  https://github.com/vladotesanovic/angular2-express-starter
+  http://thejackalofjavascript.com/developing-a-mean-app-with-angular-2-0/
 Bootstrap
 
 & Data

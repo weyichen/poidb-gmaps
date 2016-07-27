@@ -4,21 +4,22 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var flash = require('connect-flash');
+const path = require('path');
 
 var app = module.exports = express();
-app.set('port', (process.env.PORT || 5000));
-app.set('local', 'LOCAL' in process.env);
-app.set('dbmode', process.env.DBMODE);
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
+app.set('port', 5000);
+app.set('dbmode', 'mongodb');
+app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds015924.mlab.com:15924/heroku_jwmv0642');
+
+app.set('views', __dirname + '/../public');
 app.set('view engine', 'ejs');
 
 // setup appropriate database for local or Heroku
 var db, mongoose, pg, stormpath;
 if (app.get('dbmode') === 'mongodb') {
   mongoose = require('mongoose');
-  mongoose.connect(process.env.MONGODB_URI, function (err) {
+  mongoose.connect(app.get('mongodb-uri'), function (err) {
     if (err) { console.log(err); return; }
     console.log("connected to mongodb!");
   });
@@ -34,7 +35,9 @@ else if (app.get('dbmode') === 'stormpath'){
 
 // MIDDLEWARES
 
-app.use(express.static(__dirname + '/public'));
+app.use('/static', express.static(__dirname + '/../public'));
+app.use('/client', express.static(__dirname + '/../client'));
+app.use('/node_modules', express.static(__dirname + '/../node_modules'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -71,7 +74,7 @@ app.use(function(request, response, next) {
 
 // DEBUG - log stuff
 app.use(function(req, res, next) {
-  console.log("URL: " + req.originalUrl);
+  //console.log("URL: " + req.originalUrl);
   next();
 });
 
@@ -90,17 +93,25 @@ passportAuth(passport);
 var authRoutes = require('./passport/routes');
 authRoutes(passport);
 
-app.get('/', function(request, response) {
-  response.render('pages/index');
-});
-
-
-
 app.get('/debug', function (req, res) {
-  var debug = "hello!";
-  res.render('pages/debug');
+  res.locals.debug = "hello debug!";
+  res.render('views/pages/debug');
 });
 
+app.get('/', function(req, res) {
+  res.sendFile('index.html', {root: __dirname + '/../public/'});
+})
+
+// bottom catch-all to redirect all Angular app routes to the Angular router
+app.get('*', function(req, res) {
+  // ignore requests for non-existent files
+  if (!path.extname(req.path)) {
+    res.sendFile('index.html', {root: __dirname + '/../public/'});
+  }
+  else {
+    res.status(404).end();
+  }
+});
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));

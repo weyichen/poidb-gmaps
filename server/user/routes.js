@@ -23,10 +23,10 @@ var isAuthorized = function(req, res, next) {
 };
 
 router.get('/users', user.list);
-router.all('/user/:id/:op?', user.load);
-router.get('/user/:id', user.view);
-router.get('/user/:id/view', user.view);
-router.get('/user/:id/edit', isAuthorized, user.edit);
+router.all('/user/:id/:op?', user.read);
+router.get('/user/:id', user.read);
+router.get('/user/:id/view', user.read);
+router.get('/user/:id/edit', isAuthorized, user.read);
 router.post('/user/:id/edit', isAuthorized, user.update); // ISSUE: HTML forms don't support PUT, you have to transform it server-side
 router.get('/user/:id/delete', isAuthorized, user.delete);
 

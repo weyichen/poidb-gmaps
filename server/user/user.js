@@ -17,38 +17,23 @@ users[1] = new User({
 
 exports.list = function(req, res) {
   User.find({}, function(err, users) {
-    if (err) throw err;
-
-    res.render('users', { title: 'Users', users: users });
+    if (err) res.send(err);
+    res.json(users);
   });
 };
 
-exports.load = function(req, res, next) {
+exports.read = function(req, res, next) {
   User.findById(req.params.id, function(err, user) {
-    req.lookupUser = user;
-    if (req.lookupUser) {
-      next();
+    if (user) {
+      res.json(user);
     } else {
       var err = new Error('cannot find user ' + req.params.id);
       err.status = 404;
-      next(err);
+      res.send(err);
     }
   });
 };
 
-exports.view = function(req, res){
-  res.render('users/view', {
-    title: 'Viewing user ' + req.lookupUser.username,
-    user: req.lookupUser
-  });
-};
-
-exports.edit = function(req, res){
-  res.render('users/edit', {
-    title: 'Editing user ' + req.lookupUser.name,
-    user: req.lookupUser
-  });
-};
 
 exports.update = function(req, res) {
   var user = req.lookupUser;
@@ -56,14 +41,13 @@ exports.update = function(req, res) {
         if (req.body[property])
           user[property] = req.body[property];
       }
-      user.save(function(error) {
-        if (error) {
-          req.flash('error', error.errmsg);
-          console.log(error.errmsg);
+      user.save(function(error, user) {
+        if (err) {
+          res.send(err);
         }
-        else
-          console.log('edited user ' + user.username);
-        res.redirect('back');
+        else {
+          res.json('update success');
+        }
       }); // ISSUE:  Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html
       // https://github.com/Automattic/mongoose/wiki/5.0-Deprecation-Warnings
 };
@@ -71,12 +55,10 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   User.findByIdAndRemove(req.params.id, function(error, user) {
     if (error) {
-      req.flash('error', error.errmsg);
-      console.log(error.errmsg);
+      res.send(err);
     }
     else
-      console.log('deleted user ' + user.username);
-    res.redirect('/');
+      res.json('delete success');
   });
 }
 
