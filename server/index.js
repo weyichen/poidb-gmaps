@@ -19,6 +19,7 @@ app.set('view engine', 'ejs');
 var db, mongoose, pg, stormpath;
 if (app.get('dbmode') === 'mongodb') {
   mongoose = require('mongoose');
+  mongoose.promise = global.Promise; // use ES6 promise library
   mongoose.connect(app.get('mongodb-uri'), function (err) {
     if (err) { console.log(err); return; }
     console.log("connected to mongodb!");
@@ -60,6 +61,9 @@ app.use(flash());
 app.use(function(request, response, next) {
   if (request.user)
     app.locals.username = request.user.username;
+  else
+    // remove username if user has logged out
+    app.locals.username = null;
   next();
 });
 
@@ -85,13 +89,11 @@ var User = require('./models/user');
 
 var user = require('./user/user');
 var userRoutes = require('./user/routes');
-app.use(userRoutes);
+app.use('/api/user', userRoutes);
 
 // set up passport strategies and authentication routes
-var passportAuth = require('./passport/passport');
-passportAuth(passport);
-var authRoutes = require('./passport/routes');
-authRoutes(passport);
+require('./passport/passport')(passport);
+require('./passport/routes')(passport);
 
 app.get('/debug', function (req, res) {
   res.locals.debug = "hello debug!";

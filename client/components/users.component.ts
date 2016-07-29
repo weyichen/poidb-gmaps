@@ -1,20 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 //import { User } from '../user';
-// import { HeroDetailComponent } from './hero-detail.component';
 import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'my-users',
   templateUrl: 'client/components/users.component.html',
-  // styleUrls: ['client/app/users.component.css'],
-  // directives: [HeroDetailComponent]
+  styles: [`
+    .selected {
+      background-color: #CFD8DC !important;
+      color: white;
+    }
+    `],
+  directives: [ROUTER_DIRECTIVES]
 })
 export class UsersComponent implements OnInit {
-  users: Object[];
-  // addingHero: boolean;
-  selectedUser: Object;
+  users: any[];
+  selectedUser: any;
   error: any;
 
   constructor(
@@ -23,27 +26,15 @@ export class UsersComponent implements OnInit {
     };
 
     getUsers() {
-      this.userService.getUsers()
-      .then(users => {
-        this.users = users;
-        // for (var u in users) {
-        //   console.log(users[u]);
-        //   this.users.push(new User(users[u]._id, users[u].username, users[u].email));
-        // }
-      })
+      this.userService.list()
+      .then(users => this.users = users)
     }
 
     getUser(id: string) {
-      this.userService.getUser(id)
+      this.userService.get(id)
       .then(user => this.selectedUser = user);
     }
 
-
-
-  // addHero() {
-  //   this.addingHero = true;
-  //   this.selectedHero = null;
-  // }
   //
   // close(savedHero: Hero) {
   //   this.addingHero = false;
@@ -63,12 +54,13 @@ export class UsersComponent implements OnInit {
   //
   ngOnInit() {
     this.getUsers();
-    this.getUser('5779388944f73c5d33cd5fa7');
+    this.userService.getLoggedInUser()
+    .then(user => this.selectedUser = user);
   }
 
   onSelect(user: Object) { this.selectedUser = user; }
 
-  // gotoDetail() {
-  //   this.router.navigate(['/detail', this.selectedHero.id]);
-  // }
+  gotoProfile() {
+    this.router.navigate(['/user', this.selectedUser._id]);
+  }
 }

@@ -16,40 +16,32 @@ users[1] = new User({
 });
 
 exports.list = function(req, res) {
-  User.find({}, function(err, users) {
-    if (err) res.send(err);
-    res.json(users);
-  });
+  User.find({})
+  .then(users => res.json(users))
+  .catch(err => res.send(err));
 };
 
-exports.read = function(req, res, next) {
-  User.findById(req.params.id, function(err, user) {
-    if (user) {
-      res.json(user);
-    } else {
-      var err = new Error('cannot find user ' + req.params.id);
-      err.status = 404;
+exports.read = function(req, res) {
+  User.findById(req.params.id)
+    .then(user => res.json(user))
+    .catch(() => {
+      var err = 'Cannot find user ' + req.params.id;
       res.send(err);
-    }
-  });
+    });
 };
-
 
 exports.update = function(req, res) {
-  var user = req.lookupUser;
+  User.findById(req.params.id)
+    .then(user => {
       for (var property in req.body) {
         if (req.body[property])
           user[property] = req.body[property];
+      user.save()
+        .then(user => res.json(user));
       }
-      user.save(function(error, user) {
-        if (err) {
-          res.send(err);
-        }
-        else {
-          res.json('update success');
-        }
-      }); // ISSUE:  Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html
-      // https://github.com/Automattic/mongoose/wiki/5.0-Deprecation-Warnings
+    })
+    .then() // TODO: how to get promise from user.save here?
+    .catch(err => res.send(err));
 };
 
 exports.delete = function(req, res) {

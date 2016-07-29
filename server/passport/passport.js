@@ -24,10 +24,10 @@ module.exports = function(passport) {
         if (err)
           return done(err);
         if (!user)
-          return done(null, false, req.flash('warning', 'You are not yet registered!'));
+          return done(null, false);
         if (!bcrypt.compareSync(password, user.password))
-          return done(null, false, req.flash('danger', 'You password is incorrect! Please try again.'));
-        return done(null, user, req.flash('success', 'Logged in as ' + user.username));
+          return done(null, false);
+        return done(null, user);
       });
     }
   ));

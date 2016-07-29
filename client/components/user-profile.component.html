@@ -1,0 +1,40 @@
+<div *ngIf="user">
+  
+  <h2>
+    <span *ngIf="editing">Editing user: </span> <span>{{user.username}}</span>
+    <button *ngIf="!editing" class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" (click)="editToggle()">
+      <i class="material-icons">mode_edit</i>
+    </button>
+    <button *ngIf="editing" class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" (click)="editToggle()">
+      <i class="material-icons">clear</i>
+    </button>
+    <button *ngIf="editing" class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" (click)="save(); editToggle()">
+      <i class="material-icons">save</i>
+    </button>
+  </h2>
+
+  <div>
+    <label>id: </label>{{user._id}}
+  </div>
+
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    <input [(ngModel)]="user.username" class="mdl-textfield__input" type="text" id="username">
+    <label for="username">Username</label>
+  </div>
+
+  <div class="mdl-textfield mdl-js-textfield">
+    <input [(ngModel)]="user.password" class="mdl-textfield__input" type="password" id="password">
+    <label for="password">Password</label>
+  </div>
+
+  <div class="mdl-textfield mdl-js-textfield">
+    <input [(ngModel)]="user.name" class="mdl-textfield__input" type="text" id="name">
+    <label for="name">Name</label>
+  </div>
+
+  <div class="mdl-textfield mdl-js-textfield">
+    <input [(ngModel)]="user.email" class="mdl-textfield__input" type="text" id="name">
+    <label for="name">Email</label>
+  </div>
+
+</div>

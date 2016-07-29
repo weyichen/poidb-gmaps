@@ -42,6 +42,8 @@ Mongoose
     http://mongoosejs.com/docs/models.html
     http://mongoosejs.com/docs/validation.html
     https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
+    ES6 Promises with Mongoose
+    http://erikaybar.name/using-es6-promises-with-mongoosejs-queries/
 
 & Front-End
 Angular 2
@@ -49,7 +51,15 @@ Angular 2
   Integrating Angular and Express
   https://github.com/vladotesanovic/angular2-express-starter
   http://thejackalofjavascript.com/developing-a-mean-app-with-angular-2-0/
-Bootstrap
+  https://github.com/domfarolino/angular2-login-seed
+  Router
+  http://stackoverflow.com/questions/21067717/angularjs-and-express-routing-issue
+  http://stackoverflow.com/questions/31415052/angular-2-0-router-not-working-on-reloading-the-browser/31457808#31457808
+  https://angular.io/docs/ts/latest/guide/router.html#!#base-href
+
+Material Design Lite
+  https://getmdl.io
+  https://design.google.com/icons/
 
 & Data
 Google Maps JS API

@@ -9,54 +9,61 @@ var isAuthenticated = function(request, response, next) {
 
 module.exports = function(passport) {
 
-  app.get('/login', function(request, response) {
-    if (request.user)
-      response.redirect('/profile');
-    response.render('passport/login');
+  // app.get('/login', function(request, response) {
+  //   if (request.user)
+  //     response.redirect('/profile');
+  //   response.render('passport/login');
+  // });
+  app.post('/login', function(req, res, next) {
+    passport.authenticate('login', function(error, user) {
+      console.log(user);
+      console.log(info);
+      res.json(user);
+    })(req, res, next);
   });
-  app.post('/login', passport.authenticate(
-    'login', {  successRedirect: '/loginsuccess',
-                failureRedirect: '/login',
-                failureFlash: true }
-  ));
 
-  app.get('/signup', function(request, response) {
-    if (request.user)
-      response.redirect('/profile');
-    response.render('passport/signup');
+  app.get('/loggedinuser', function (req, res) {
+    res.json(req.user);
   });
+
+  // app.get('/signup', function(request, response) {
+  //   if (request.user)
+  //     response.redirect('/profile');
+  //   response.render('passport/signup');
+  // });
   app.post('/signup', passport.authenticate(
     'signup', { successRedirect: '/loginsuccess',
                 failureRedirect: '/signup',
                 failureFlash: true }
   ));
-  app.get('/loginsuccess', isAuthenticated, function(req, res) {
-    // upon successful authentication req.user contains the authenticated user
-    req.flash('success', 'Logged in as ' + req.user.username);
-    res.redirect('/profile');
-  });
 
-  app.get('/logout', function(request, response) {
-    request.logout();
-    app.locals.username = null;
-    response.redirect('/login');
-  });
+  // app.get('/loginsuccess', isAuthenticated, function(req, res) {
+  //   // upon successful authentication req.user contains the authenticated user
+  //   req.flash('success', 'Logged in as ' + req.user.username);
+  //   res.redirect('/profile');
+  // });
 
-  app.get('/profile', isAuthenticated, function(req, res) {
-    res.render('users/view', {
-      own: true,
-      title: 'Your Profile',
-      user: req.user
-    });
-  });
+  // app.get('/logout', function(request, response) {
+  //   request.logout();
+  //   app.locals.username = null;
+  //   response.redirect('/login');
+  // });
 
-  app.get('/editprofile', isAuthenticated, function(req, res) {
-    res.render('users/edit', {
-      own: true,
-      title: 'Edit your profile',
-      user: req.user
-    });
-  });
+  // app.get('/profile', isAuthenticated, function(req, res) {
+  //   res.render('users/view', {
+  //     own: true,
+  //     title: 'Your Profile',
+  //     user: req.user
+  //   });
+  // });
+  //
+  // app.get('/editprofile', isAuthenticated, function(req, res) {
+  //   res.render('users/edit', {
+  //     own: true,
+  //     title: 'Edit your profile',
+  //     user: req.user
+  //   });
+  // });
 
   return app;
 }
