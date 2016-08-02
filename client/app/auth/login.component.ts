@@ -1,16 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { UserService } from '../services/user.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'user-login',
-  templateUrl: 'client/components/user-login.component.html',
-  styles: [],
-  precompile: [UserLoginComponent]
+  templateUrl: 'client/app/auth/login.component.html',
+  styles: []
 })
 
-export class UserLoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
   @Input() user: Object;
   @Output() close = new EventEmitter();
 
@@ -20,7 +19,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   sub: any;
 
   constructor(
-    private userService: UserService,
+    private authService: AuthService,
     private route: ActivatedRoute
   ) {}
 
@@ -34,19 +33,19 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.userService
+    this.authService
       .login(this.user)
       .then(user => console.log(user)) // TODO: where to store this user object to preserve session?
       .catch(error => this.error = error);
   }
 
   // TODO:
-  signUp() {
-    this.userService
-      .put(this.user)
-      .then(user => {
-        this.user = user;
-      })
-      .catch(error => this.error = error);
-  }
+  // signUp() {
+  //   this.authService
+  //     .put(this.user)
+  //     .then(user => {
+  //       this.user = user;
+  //     })
+  //     .catch(error => this.error = error);
+  // }
 }

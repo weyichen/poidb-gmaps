@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 //import { User } from '../user';
-import { UserService } from '../services/user.service';
+import { UserService } from './user.service';
+import { AuthService } from '../auth/auth.service';
+import { NavService } from '../nav/nav.service';
 
 @Component({
   selector: 'my-users',
-  templateUrl: 'client/components/users.component.html',
+  templateUrl: 'client/app/users/users.component.html',
   styles: [`
     .selected {
       background-color: #CFD8DC !important;
@@ -22,6 +24,8 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
+    private navService: NavService,
     private router: Router) {
     };
 
@@ -53,8 +57,10 @@ export class UsersComponent implements OnInit {
   // }
   //
   ngOnInit() {
+    this.navService.changeTitle('Users');
+
     this.getUsers();
-    this.userService.getLoggedInUser()
+    this.authService.getLoggedInUser()
     .then(user => this.selectedUser = user);
   }
 

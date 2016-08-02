@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { UserService } from '../services/user.service';
+import { UserService } from './user.service';
 
 @Component({
   selector: 'user-profile',
-  templateUrl: 'client/components/user-profile.component.html',
+  templateUrl: 'client/app/users/user-profile.component.html',
   styles: [],
   precompile: [UserProfileComponent]
 })

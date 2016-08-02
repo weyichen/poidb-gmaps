@@ -1,9 +1,9 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from "@angular/common";
 
-import { UsersComponent } from './components/users.component';
-import { UserProfileComponent } from './components/user-profile.component';
-import { UserLoginComponent } from './components/user-login.component';
+import { UsersComponent } from './users/users.component';
+import { UserProfileComponent } from './users/user-profile.component';
+import { LoginComponent } from './auth/login.component';
 
 const routes: RouterConfig = [
   {
@@ -21,7 +21,12 @@ const routes: RouterConfig = [
   },
   {
     path: 'login',
-    component: UserLoginComponent
+    component: LoginComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'users'
+    //component: PageNotFoundComponent
   }
 ];
 

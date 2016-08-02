@@ -56,6 +56,7 @@ Angular 2
   http://stackoverflow.com/questions/21067717/angularjs-and-express-routing-issue
   http://stackoverflow.com/questions/31415052/angular-2-0-router-not-working-on-reloading-the-browser/31457808#31457808
   https://angular.io/docs/ts/latest/guide/router.html#!#base-href
+  http://stackoverflow.com/questions/35912932/angular-2-router-event-listener
 
 Material Design Lite
   https://getmdl.io
