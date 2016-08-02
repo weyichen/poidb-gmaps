@@ -32,7 +32,7 @@ var isAuthorized = function(req, res, next) {
 router.get('/list', user.list);
 router.get('/:id', user.read);
 router.put('/:id', user.update); // TODO: reimplement isAuthorized
-router.delete('/:id', isAuthorized, user.delete);
+router.delete('/:id', user.delete);  // TODO: reimplement isAuthorized
 
 // TODO:
 router.get('/map', user.getMap);

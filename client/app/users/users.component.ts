@@ -39,6 +39,13 @@ export class UsersComponent implements OnInit {
       .then(user => this.selectedUser = user);
     }
 
+    deleteUser(user: any, event: any) {
+      event.stopPropagation();
+      this.userService
+        .delete(user._id)
+        .catch(error => this.error = error);
+    }
+
   //
   // close(savedHero: Hero) {
   //   this.addingHero = false;

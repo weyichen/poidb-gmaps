@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   @Input() user: Object;
   @Output() close = new EventEmitter();
 
-  signup: boolean;
+  signupMode: boolean;
 
   error: any;
   sub: any;
@@ -25,11 +25,18 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = {};
-    this.signup = false;
+    this.signupMode = false;
   }
 
   ngOnDestroy() {
     //this.sub.unsubscribe();
+  }
+
+  toggleMode() {
+    if (this.signupMode)
+      this.signupMode = false;
+    else
+      this.signupMode = true;
   }
 
   login() {
@@ -40,12 +47,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   // TODO:
-  // signUp() {
-  //   this.authService
-  //     .put(this.user)
-  //     .then(user => {
-  //       this.user = user;
-  //     })
-  //     .catch(error => this.error = error);
-  // }
+  signUp() {
+    this.authService
+      .signup(this.user)
+      .then(user => console.log(user))
+      .catch(error => this.error = error);
+  }
 }

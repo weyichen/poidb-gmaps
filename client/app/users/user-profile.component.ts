@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angu
 import { ActivatedRoute } from '@angular/router';
 
 import { UserService } from './user.service';
+import { NavService } from '../nav/nav.service';
 
 @Component({
   selector: 'user-profile',
   templateUrl: 'client/app/users/user-profile.component.html',
-  styles: [],
-  precompile: [UserProfileComponent]
+  styles: []
 })
 
 export class UserProfileComponent implements OnInit, OnDestroy {
@@ -22,6 +22,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
+    private navService: NavService,
     private route: ActivatedRoute
   ) {}
 
@@ -31,7 +32,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         let id = params['id'];
         this.navigated = true;
         this.userService.get(id)
-          .then(user => this.user = user);
+          .then(user => {
+            this.user = user;
+            this.navService.changeTitle('Editing user ' + user.username);
+          });
       } else {
         this.navigated = false;
         this.user = null;

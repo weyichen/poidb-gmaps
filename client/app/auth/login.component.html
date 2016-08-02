@@ -1,7 +1,10 @@
 
 
-<h2 *ngIf="!signup">Login</h2>
-<h2 *ngIf="signup">Signup</h2>
+<h2 *ngIf="!signupMode">Login</h2>
+<button *ngIf="!signupMode" (click)="toggleMode()">Sign Up</button>
+
+<h2 *ngIf="signupMode">signupMode</h2>
+<button *ngIf="signupMode" (click)="toggleMode()">Login</button>
 
   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
     <input [(ngModel)]="user.username" class="mdl-textfield__input" type="text" id="username">
@@ -13,7 +16,7 @@
     <label for="password">Password</label>
   </div>
 
-<div *ngIf="signup">
+<div *ngIf="signupMode">
 
   <div class="mdl-textfield mdl-js-textfield">
     <input [(ngModel)]="user.password" class="mdl-textfield__input" type="password" id="confpassword">
@@ -27,5 +30,5 @@
 
 </div>
 
-<button *ngIf="!signup" (click)="login()">Login</button>
-<button *ngIf="signup" (click)="signUp()">Sign Up</button>
+<button *ngIf="!signupMode" (click)="login()">Login</button>
+<button *ngIf="signupMode" (click)="signUp()">Sign Up</button>

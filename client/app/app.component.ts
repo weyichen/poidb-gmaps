@@ -6,11 +6,16 @@ import { UserService } from './users/user.service';
 import { AuthService } from './auth/auth.service';
 import { NavService } from './nav/nav.service';
 
+import { UsersComponent } from './users/users.component';
+import { UserProfileComponent } from './users/user-profile.component';
+import { LoginComponent } from './auth/login.component';
+
 @Component({
   selector: 'my-app',
   templateUrl: 'client/app/app.component.html',
   directives: [ROUTER_DIRECTIVES],
-  providers: [UserService, AuthService, NavService]
+  providers: [UserService, AuthService, NavService],
+  precompile: [UsersComponent, UserProfileComponent, LoginComponent]
 })
 export class AppComponent implements OnInit{
   constructor(

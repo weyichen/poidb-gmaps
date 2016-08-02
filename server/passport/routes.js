@@ -14,15 +14,12 @@ module.exports = function(passport) {
   //     response.redirect('/profile');
   //   response.render('passport/login');
   // });
-  app.post('/login', function(req, res, next) {
-    passport.authenticate('login', function(error, user) {
-      console.log(user);
-      console.log(info);
-      res.json(user);
-    })(req, res, next);
+  app.post('/login', passport.authenticate('login'), function(req, res) {
+    res.json(req.user);
   });
 
   app.get('/loggedinuser', function (req, res) {
+    console.log('Logged in user: ' + req.user);
     res.json(req.user);
   });
 
@@ -31,11 +28,17 @@ module.exports = function(passport) {
   //     response.redirect('/profile');
   //   response.render('passport/signup');
   // });
-  app.post('/signup', passport.authenticate(
-    'signup', { successRedirect: '/loginsuccess',
-                failureRedirect: '/signup',
-                failureFlash: true }
-  ));
+  app.post('/signup', passport.authenticate('signup'), function(req, res) {
+    res.json(req.user);
+  });
+
+  // app.post('/signup', function(req, res, next) {
+  //   passport.authenticate('signup', function(error, user) {
+  //     console.log(user);
+  //     console.log(error);
+  //     res.json(user);
+  //   })(req, res, next);
+  // });
 
   // app.get('/loginsuccess', isAuthenticated, function(req, res) {
   //   // upon successful authentication req.user contains the authenticated user

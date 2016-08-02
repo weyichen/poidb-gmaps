@@ -48,6 +48,7 @@ Mongoose
 & Front-End
 Angular 2
   https://angular.io/docs/ts/latest/
+  https://angular.io/docs/ts/latest/cookbook/component-communication.html#!#bidirectional-service
   Integrating Angular and Express
   https://github.com/vladotesanovic/angular2-express-starter
   http://thejackalofjavascript.com/developing-a-mean-app-with-angular-2-0/

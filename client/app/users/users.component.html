@@ -19,10 +19,6 @@
   </li>
 </ul>
 <div class="error" *ngIf="error">{{error}}</div>
-<button (click)="addUser()">Add New Hero</button>
-<!-- <div *ngIf="addingUser">
-  <my-hero-detail (close)="close($event)"></my-hero-detail>
-</div>-->
 
 <div *ngIf = "selectedUser">
   <h2>{{selectedUser.username | uppercase}} is my hero</h2>

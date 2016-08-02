@@ -23,6 +23,17 @@ export class AuthService {
       .catch(this.handleError);
   }
 
+  signup(user: Object): Promise<Object> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post('signup', JSON.stringify(user), {headers: headers})
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleError);
+  }
+
   getLoggedInUser(): Promise<Object> {
     return this.http.get('loggedinuser')
       .toPromise()
