@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 //import { User } from '../user';
-import { UserService } from './user.service';
-import { AuthService } from '../auth/auth.service';
-import { NavService } from '../nav/nav.service';
+import { UserService, AuthService, NavService } from '../shared/index';
 
 @Component({
   selector: 'my-users',
@@ -26,49 +24,31 @@ export class UsersComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private navService: NavService,
-    private router: Router) {
-    };
+    private router: Router
+  ) { }
 
-    getUsers() {
-      this.userService.list()
-      .then(users => this.users = users)
-    }
-
-    getUser(id: string) {
-      this.userService.get(id)
-      .then(user => this.selectedUser = user);
-    }
-
-    deleteUser(user: any, event: any) {
-      event.stopPropagation();
-      this.userService
-        .delete(user._id)
-        .catch(error => this.error = error);
-    }
-
-  //
-  // close(savedHero: Hero) {
-  //   this.addingHero = false;
-  //   if (savedHero) {this.getHeroes(); }
-  // }
-  //
-  // deleteHero(hero: Hero, event: any) {
-  //   event.stopPropagation();
-  //   this.heroService
-  //     .delete(hero)
-  //     .then(res => {
-  //       this.heroes = this.heroes.filter(h => h !== hero);
-  //       if (this.selectedHero === hero) { this.selectedHero = null; }
-  //     })
-  //     .catch(error => this.error = error);
-  // }
-  //
   ngOnInit() {
     this.navService.changeTitle('Users');
 
     this.getUsers();
-    this.authService.getLoggedInUser()
+    this.selectedUser = this.authService.getLoggedInUser();
+  }
+
+  getUsers() {
+    this.userService.list()
+    .then(users => this.users = users)
+  }
+
+  getUser(id: string) {
+    this.userService.get(id)
     .then(user => this.selectedUser = user);
+  }
+
+  deleteUser(user: any, event: any) {
+    event.stopPropagation();
+    this.userService
+      .delete(user._id)
+      .catch(error => this.error = error);
   }
 
   onSelect(user: Object) { this.selectedUser = user; }

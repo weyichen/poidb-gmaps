@@ -7,8 +7,14 @@
       <div class="mdl-layout-spacer"></div>
       <!-- Navigation -->
       <nav class="mdl-navigation">
+
         <a routerLink="/users" class="mdl-navigation__link" routerLinkActive="active">Users</a>
-        <a routerLink="/login" class="mdl-navigation__link" routerLinkActive="active">Login</a>
+
+        <a *ngIf="!loggedInUser" routerLink="/login" class="mdl-navigation__link" routerLinkActive="active">Login</a>
+
+        <a *ngIf="loggedInUser" [routerLink]="['/user', loggedInUser._id]" class="mdl-navigation__link" routerLinkActive="active">{{loggedInUser.username}}</a>
+        <a *ngIf="loggedInUser" (click)="logout()" class="mdl-navigation__link" routerLinkActive="active">Logout</a>
+
       </nav>
     </div>
   </header>

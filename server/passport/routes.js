@@ -9,13 +9,25 @@ var isAuthenticated = function(request, response, next) {
 
 module.exports = function(passport) {
 
-  // app.get('/login', function(request, response) {
-  //   if (request.user)
-  //     response.redirect('/profile');
-  //   response.render('passport/login');
-  // });
-  app.post('/login', passport.authenticate('login'), function(req, res) {
-    res.json(req.user);
+  app.post('/login', function(req, res, next) {
+    if (!checkRequiredFields(req, res))
+      return;
+
+    // need to place callback within passport.authenticate call
+    // if outside, will only be called if authentication is successful
+    // if failed, POST to /login will return Forbidden status
+    passport.authenticate('login', function(error, user) {
+      if (!user) {
+        res.json(req.flash().authError[0]);
+        return;
+      }
+      res.json(user);
+    })(req, res, next);
+  });
+
+  app.get('/logout', function(req, res) {
+    req.logout();
+    res.json('logout ok');
   });
 
   app.get('/loggedinuser', function (req, res) {
@@ -23,50 +35,26 @@ module.exports = function(passport) {
     res.json(req.user);
   });
 
-  // app.get('/signup', function(request, response) {
-  //   if (request.user)
-  //     response.redirect('/profile');
-  //   response.render('passport/signup');
-  // });
-  app.post('/signup', passport.authenticate('signup'), function(req, res) {
-    res.json(req.user);
+  app.post('/signup', function(req, res, next) {
+    if (!checkRequiredFields(req, res))
+      return;
+
+    passport.authenticate('signup', function(error, user) {
+      if (!user) {
+        res.json(req.flash().authError[0]);
+        return;
+      }
+      res.json(user);
+    })(req, res, next);
   });
 
-  // app.post('/signup', function(req, res, next) {
-  //   passport.authenticate('signup', function(error, user) {
-  //     console.log(user);
-  //     console.log(error);
-  //     res.json(user);
-  //   })(req, res, next);
-  // });
-
-  // app.get('/loginsuccess', isAuthenticated, function(req, res) {
-  //   // upon successful authentication req.user contains the authenticated user
-  //   req.flash('success', 'Logged in as ' + req.user.username);
-  //   res.redirect('/profile');
-  // });
-
-  // app.get('/logout', function(request, response) {
-  //   request.logout();
-  //   app.locals.username = null;
-  //   response.redirect('/login');
-  // });
-
-  // app.get('/profile', isAuthenticated, function(req, res) {
-  //   res.render('users/view', {
-  //     own: true,
-  //     title: 'Your Profile',
-  //     user: req.user
-  //   });
-  // });
-  //
-  // app.get('/editprofile', isAuthenticated, function(req, res) {
-  //   res.render('users/edit', {
-  //     own: true,
-  //     title: 'Edit your profile',
-  //     user: req.user
-  //   });
-  // });
-
   return app;
+}
+
+function checkRequiredFields(req, res) {
+  if (!req.body.username || !req.body.password) {
+    res.json("Missing username or password!");
+    return false;
+  }
+  return true;
 }

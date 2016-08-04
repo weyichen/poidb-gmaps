@@ -1,20 +1,5 @@
 var User = require('../models/user');
 
-// Fake user database
-var users = [];
-users[0] = new User({
-  username: 'tj',
-  password: 'homelessspa',
-  name: 'TJ',
-  email: 'tj@vision-media.ca'
-});
-users[1] = new User({
-  username: 'tobi',
-  password: 'isagoodboy',
-  name: 'Tobi',
-  email: 'tobi@vision-media.ca'
-});
-
 exports.list = function(req, res) {
   User.find({})
   .then(users => res.json(users))
@@ -108,6 +93,21 @@ exports.debugmod = function(req, res) {
     }
   });
 }
+
+// Fake user database
+var users = [];
+users[0] = new User({
+  username: 'tj',
+  password: 'homelessspa',
+  name: 'TJ',
+  email: 'tj@vision-media.ca'
+});
+users[1] = new User({
+  username: 'tobi',
+  password: 'isagoodboy',
+  name: 'Tobi',
+  email: 'tobi@vision-media.ca'
+});
 
 exports.populate = function(req, res) {
   User.create(users, function (err, addedUsers) {

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AuthService } from './auth.service';
+import { AuthService, NavService } from '../shared/index';
 
 @Component({
   selector: 'user-login',
@@ -9,27 +9,21 @@ import { AuthService } from './auth.service';
   styles: []
 })
 
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
+
   @Input() user: Object;
-  @Output() close = new EventEmitter();
-
   signupMode: boolean;
-
   error: any;
-  sub: any;
 
   constructor(
     private authService: AuthService,
+    private navService: NavService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.user = {};
     this.signupMode = false;
-  }
-
-  ngOnDestroy() {
-    //this.sub.unsubscribe();
   }
 
   toggleMode() {
@@ -42,15 +36,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     this.authService
       .login(this.user)
-      .then(user => console.log(user)) // TODO: where to store this user object to preserve session?
+      .then(response => this.handleAuthResponse(response))
       .catch(error => this.error = error);
   }
 
-  // TODO:
   signUp() {
     this.authService
       .signup(this.user)
-      .then(user => console.log(user))
+      .then(response => this.handleAuthResponse(response))
       .catch(error => this.error = error);
+  }
+
+  private handleAuthResponse(response: any) {
+    if (response._id) {
+      this.navService.logIn(response);
+      this.navService.changeMessage('Welcome, ' + response.username);
+    } else {
+      this.navService.changeMessage(response);
+    }
   }
 }

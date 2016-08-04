@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { UserService } from './user.service';
-import { NavService } from '../nav/nav.service';
+import { UserService, AuthService, NavService } from '../shared/index';
 
 @Component({
   selector: 'user-profile',

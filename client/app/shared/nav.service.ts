@@ -7,8 +7,12 @@ export class NavService {
   constructor() { }
 
   private titleChangedSource = new Subject<string>();
+  private messageChangedSource = new Subject<string>();
+  private loggedInSource = new Subject<string>();
 
   titleChanged$ = this.titleChangedSource.asObservable();
+  messageChanged$ = this.messageChangedSource.asObservable();
+  loggedIn$ = this.loggedInSource.asObservable();
 
   title: string;
 
@@ -18,5 +22,13 @@ export class NavService {
 
   getTitle() {
     return this.title;
+  }
+
+  changeMessage(message: string) {
+    this.messageChangedSource.next(message);
+  }
+
+  logIn(user: any) {
+    this.loggedInSource.next(user);
   }
 }

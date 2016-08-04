@@ -24,9 +24,9 @@ module.exports = function(passport) {
         if (err)
           return done(err);
         if (!user)
-          return done(null, {error: true, message: 'You are not yet registered.'});
+          return done(null, false, req.flash('authError', 'You are not yet registered.'));
         if (!bcrypt.compareSync(password, user.password))
-          return done(null, {error: true, message: 'Incorrect username or password.'});
+          return done(null, false, req.flash('authError', 'Incorrect username or password.'));
         return done(null, user);
       });
     }
@@ -36,15 +36,14 @@ module.exports = function(passport) {
     passReqToCallback: true
   },
     function(req, username, password, done) {
-      // first check if user already exists
       console.log("registering as " + username);
       User.create({ 'username': username, 'password': password }, function (err, user) {
         if (err) {
           if (err.code === 11000) // handle duplicates
-            return done(null, {error: true, message: 'This username has been taken. Please try another.'});
+            return done(null, false, req.flash('authError', 'This username has been taken. Please try another.'));
           return done(err);
         }
-        //console.log('Registered as ' + user.username);
+        console.log('Registered as ' + user.username);
         return done(null, user);
       });
     }
