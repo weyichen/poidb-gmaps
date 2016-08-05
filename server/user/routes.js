@@ -31,7 +31,7 @@ var isAuthorized = function(req, res, next) {
 // When called from a middleware, the mount point (/api/user) is not included in req.path
 router.get('/list', user.list);
 router.get('/:id', user.read);
-router.put('/:id', user.update); // TODO: reimplement isAuthorized
+router.put('/:id', isAuthorized, user.update); // TODO: reimplement isAuthorized
 router.delete('/:id', isAuthorized, user.delete);  // TODO: reimplement isAuthorized
 
 router.get('/promoteToAdmin/:id/:password', user.promoteToAdmin);

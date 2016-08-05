@@ -7,20 +7,19 @@ import { User } from './user';
 
 @Injectable()
 export class UserService {
-  private usersUrl = 'api/user/list';
-  private userUrl = 'api/user/'
+  private apiBase = 'api/user/';
 
   constructor(private http: Http) { }
 
   list(): Promise<Object[]> {
-    return this.http.get(this.usersUrl)
+    return this.http.get(this.apiBase + 'list')
       .toPromise()
       .then(response => response.json())
       .catch(this.handleError);
   }
 
   get(id: string) {
-    return this.http.get(this.userUrl + id)
+    return this.http.get(this.apiBase + id)
     .toPromise()
     .then(response => response.json())
     .catch(this.handleError);
@@ -31,7 +30,7 @@ export class UserService {
       'Content-Type': 'application/json'
     });
 
-    let url = this.userUrl + user._id;
+    let url = this.apiBase + user._id;
 
     return this.http.put(url, JSON.stringify(user), {headers: headers})
       .toPromise()
@@ -40,7 +39,7 @@ export class UserService {
   }
 
   delete(id: string) {
-    return this.http.delete(this.userUrl + id)
+    return this.http.delete(this.apiBase + id)
     .toPromise()
     .then(response => response.json())
     .catch(this.handleError);

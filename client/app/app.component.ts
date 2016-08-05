@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { UserService, AuthService, NavService } from './shared/index';
+import { AuthService, AuthGuard, NavService, UserService } from './shared/index';
 
 import { UsersComponent } from './users/users.component';
 import { UserProfileComponent } from './users/user-profile.component';
@@ -12,7 +12,7 @@ import { LoginComponent } from './auth/login.component';
   selector: 'my-app',
   templateUrl: 'client/app/app.component.html',
   directives: [ROUTER_DIRECTIVES],
-  providers: [UserService, AuthService, NavService],
+  providers: [ AuthService, AuthGuard, NavService, UserService],
   precompile: [UsersComponent, UserProfileComponent, LoginComponent]
 })
 export class AppComponent implements OnInit {
@@ -45,15 +45,24 @@ export class AppComponent implements OnInit {
     this.title = 'My First Angular 2 + Express App!';
 
     // if a user is logged in, get it
-    this.loggedInUser = this.authService.getLoggedInUser();
+    this.authService.getLoggedInUser()
+      .then((response: any) => {
+        if (response.logged_in)
+          this.loggedInUser = response.user;
+        })
+      .catch(error => this.error = error);
   }
 
   logout() {
     this.authService
       .logout()
-      .then(() => {
-        this.loggedInUser = null;
-        this.navService.changeMessage('Successfully logged out. See you next time!');
+      .then((response: any) => {
+        if (response.logged_out) {
+          this.loggedInUser = null;
+          this.navService.changeMessage('Successfully logged out. See you next time!');
+        } else {
+          this.navService.changeMessage('Error logging out!');
+        }
       })
       .catch(error => this.error = error);
   }

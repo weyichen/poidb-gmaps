@@ -48,12 +48,12 @@ export class LoginComponent implements OnInit {
   }
 
   private handleAuthResponse(response: any) {
-    if (response._id) {
-      this.navService.logIn(response);
-      this.navService.changeMessage('Welcome, ' + response.username);
+    if (response.logged_in) {
+      this.navService.logIn(response.user);
+      this.navService.changeMessage('Welcome, ' + response.user.username);
       this.router.navigateByUrl('/users');
     } else {
-      this.navService.changeMessage(response);
+      this.navService.changeMessage(response.error);
     }
   }
 }

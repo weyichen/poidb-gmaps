@@ -1,9 +1,10 @@
 import { provideRouter, RouterConfig } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from "@angular/common";
 
-import { UsersComponent } from './users/users.component';
-import { UserProfileComponent } from './users/user-profile.component';
+import { ProfileEditComponent, UserProfileComponent, UsersComponent } from './users/index';
 import { LoginComponent } from './auth/login.component';
+
+import { AuthGuard, AuthService, NavService } from './shared/index';
 
 const routes: RouterConfig = [
   {
@@ -20,6 +21,11 @@ const routes: RouterConfig = [
     component: UserProfileComponent
   },
   {
+    path: 'editprofile/:id',
+    component: ProfileEditComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
@@ -32,5 +38,7 @@ const routes: RouterConfig = [
 
 export const appRouterProviders = [
   provideRouter(routes),
+  [ AuthGuard, AuthService ],
+  [ ]
 //  { provide: LocationStrategy, useClass: HashLocationStrategy }
 ];

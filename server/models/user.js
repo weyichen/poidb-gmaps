@@ -9,8 +9,8 @@ var userSchema = new Schema({
     required: [true, 'Username cannot be blank!'],
     unique: [true, 'Username already exists!']
   },
-  password: { type: String, required: true },
-  mod_password: Boolean, // only hash password when it is modified
+  password: { type: String, required: true},
+  mod_password: {type: Boolean, default: true}, // only hash password when it is modified
   name: String,
   email: String,
   admin: Boolean,

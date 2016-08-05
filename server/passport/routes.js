@@ -1,57 +1,41 @@
 var app = require('../index');
 
-// redirect routes to login page if no user is logged in
-var isAuthenticated = function(request, response, next) {
-  if (request.isAuthenticated())
-    return next();
-  response.redirect('/login');
-};
+// // TODO: does nothing right now
+// // redirect routes to login page if no user is logged in
+// var isAuthenticated = function(request, response, next) {
+//   if (request.isAuthenticated())
+//     return next();
+//   next();
+// };
 
 module.exports = function(passport) {
 
-  app.post('/login', function(req, res, next) {
-    if (!checkRequiredFields(req, res))
-      return;
+  const apiBase = '/api/auth';
 
-    // need to place callback within passport.authenticate call
-    // if placed outside, will only be called if authentication is successful
-    // if failed, POST to /login will return Forbidden status
-    passport.authenticate('login', {session: true}, function(error, user) {
-      if (!user) {
-        res.json(req.flash().authError[0]);
-        return;
-      }
-      req.login(user, function(err) {
-        if (err) return next(err);
-      });
-      res.json(user);
-    })(req, res, next);
+  app.post(apiBase + '/login', function(req, res, next) {
+    if (!checkRequiredFields(req, res))
+      return next();
+
+    usePassportStrategy(passport, 'login', req, res, next);
   });
 
-  app.get('/logout', function(req, res) {
+  app.get(apiBase + '/logout', function(req, res) {
     req.logout();
-    res.json('logout ok');
+    res.json({ logged_out: true });
   });
 
-  app.get('/loggedinuser', function (req, res) {
-    console.log('Logged in user: ' + req.user);
-    res.json(req.user);
+  app.get(apiBase + '/loggedinuser', function (req, res) {
+    if (req.user)
+      res.json({ logged_in: true, user: req.user });
+    else
+      res.json({ logged_in: false });
   });
 
-  app.post('/signup', function(req, res, next) {
+  app.post(apiBase + '/signup', function(req, res, next) {
     if (!checkRequiredFields(req, res))
-      return;
+      return next();
 
-    passport.authenticate('signup', function(error, user) {
-      if (!user) {
-        res.json(req.flash().authError[0]);
-        return;
-      }
-      req.login(user, function(err) {
-        if (err) return next(err);
-      });
-      res.json(user);
-    })(req, res, next);
+    usePassportStrategy(passport, 'signup', req, res, next);
   });
 
   return app;
@@ -59,8 +43,25 @@ module.exports = function(passport) {
 
 function checkRequiredFields(req, res) {
   if (!req.body.username || !req.body.password) {
-    res.json("Missing username or password!");
+    res.json({ logged_in: false, error: "Missing username or password!" });
     return false;
   }
   return true;
+}
+
+function usePassportStrategy(passport, strategy, req, res, next) {
+  // need to place callback within passport.authenticate call
+  // if placed outside, will only be called if authentication is successful
+  // if failed, POST to /login will return Forbidden status
+  passport.authenticate(strategy, function(error, user) {
+    if (!user) {
+      res.json({ logged_in: false, error: req.flash().authError[0] });
+      return next();
+    }
+    req.login(user, function(err) {
+      if (err) return next(err);
+    });
+    res.json({ logged_in: true, user: req.user });
+    return next();
+  })(req, res, next);
 }

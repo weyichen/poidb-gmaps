@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
@@ -7,6 +7,7 @@ import { User } from '../shared/index';
 
 @Injectable()
 export class AuthService {
+  private apiBase = 'api/auth/';
 
   constructor(
     private http: Http
@@ -17,7 +18,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post('login', JSON.stringify(user), {headers: headers})
+    return this.http.post(this.apiBase + 'login', JSON.stringify(user), {headers: headers})
       .toPromise()
       .then(response => this.handleAuthResponse(response))
       .catch(this.handleError);
@@ -28,30 +29,29 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post('signup', JSON.stringify(user), {headers: headers})
+    return this.http.post(this.apiBase + 'signup', JSON.stringify(user), {headers: headers})
       .toPromise()
       .then(response => this.handleAuthResponse(response))
       .catch(this.handleError);
   }
 
-  getLoggedInUser(): Object {
-    return JSON.parse(window.localStorage.getItem('loggedInUser'));
+  getLoggedInUser(): Promise<Object> {
+    return this.http.get(this.apiBase + 'loggedinuser')
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleError);
   }
 
   logout(): Promise<void> {
-    return this.http.get('logout')
+    return this.http.get(this.apiBase + 'logout')
       .toPromise()
-      .then((response: any) => {
-        window.localStorage.removeItem('loggedInUser');
-      })
+      .then(response => response.json())
       .catch(this.handleError);
   }
 
   private handleAuthResponse(response: any) {
-    response = response.json();
-    if (response._id)
-      window.localStorage.setItem('loggedInUser', JSON.stringify(response));
-    return response;
+    console.log(response);
+    return response.json();
   }
 
   private handleError(error: any) {

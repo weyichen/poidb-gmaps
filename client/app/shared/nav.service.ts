@@ -4,7 +4,8 @@ import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class NavService {
 
-  constructor() { }
+  constructor(
+  ) { }
 
   private titleChangedSource = new Subject<string>();
   private messageChangedSource = new Subject<string>();
