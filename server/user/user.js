@@ -19,11 +19,15 @@ exports.update = function(req, res) {
   User.findById(req.params.id)
     .then(user => {
       for (var property in req.body) {
-        if (req.body[property])
-          user[property] = req.body[property];
+      if (req.body[property]) {
+        user[property] = req.body[property];
+        // prevents model from hashing an unchanged password
+        if (property === 'password')
+          user['mod_password'] = true;
+      }
+      }
       user.save()
         .then(user => res.json(user));
-      }
     })
     .then() // TODO: how to get promise from user.save here?
     .catch(err => res.send(err));
@@ -37,6 +41,36 @@ exports.delete = function(req, res) {
     else
       res.json('delete success');
   });
+}
+
+exports.promoteToAdmin = function(req, res) {
+  if (req.params.password !== 'topsecret') {
+    res.json('incorrect promotion password!');
+    return;
+  }
+
+  User.findById(req.params.id)
+    .then(user => {
+      user.admin = true;
+      user.save()
+        .then(user => res.json(user));
+    })
+    .catch(err => res.send(err));
+}
+
+exports.demoteAdmin = function(req, res) {
+  if (req.params.password !== 'topsecret') {
+    res.json('incorrect demotion password!');
+    return;
+  }
+
+  User.findById(req.params.id)
+    .then(user => {
+      user.admin = false;
+      user.save()
+        .then(user => res.json(user));
+    })
+    .catch(err => res.send(err));
 }
 
 exports.getMap = function (req, res) {

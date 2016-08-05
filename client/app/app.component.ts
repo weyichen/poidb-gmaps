@@ -21,6 +21,15 @@ export class AppComponent implements OnInit {
     private navService: NavService,
     private authService: AuthService
   ) {
+
+    // router navigation events
+    router.events.subscribe(event => {
+      if (event.constructor.name === "NavigationEnd") {
+        navService.changeTitle('My First Angular 2 + Express App!');
+        // navService.changeMessage(null);
+      }
+    })
+
     navService.titleChanged$.subscribe(title => this.title = title);
     navService.messageChanged$.subscribe(message => this.message = message);
     navService.loggedIn$.subscribe(user => this.loggedInUser = user);

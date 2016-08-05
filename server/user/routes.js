@@ -10,7 +10,7 @@ router.use(function(req, res, next) {
 })
 
 // check if the page belongs to the logged in user
-router.use('/:id/:op?', function(req, res, next) {
+router.use('/:id', function(req, res, next) {
   if (req.user && req.params.id) {
     if (req.user._id == req.params.id) { // use == cause req.user._id is an object while params.id is a string
       res.locals.own = true;
@@ -32,7 +32,9 @@ var isAuthorized = function(req, res, next) {
 router.get('/list', user.list);
 router.get('/:id', user.read);
 router.put('/:id', user.update); // TODO: reimplement isAuthorized
-router.delete('/:id', user.delete);  // TODO: reimplement isAuthorized
+router.delete('/:id', isAuthorized, user.delete);  // TODO: reimplement isAuthorized
+
+router.get('/promoteToAdmin/:id/:password', user.promoteToAdmin);
 
 // TODO:
 router.get('/map', user.getMap);

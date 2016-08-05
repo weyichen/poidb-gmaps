@@ -51,7 +51,9 @@ export class UsersComponent implements OnInit {
       .catch(error => this.error = error);
   }
 
-  onSelect(user: Object) { this.selectedUser = user; }
+  onSelect(user: Object) {
+    this.selectedUser = user;
+  }
 
   gotoProfile() {
     this.router.navigate(['/user', this.selectedUser._id]);

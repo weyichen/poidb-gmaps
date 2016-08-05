@@ -14,14 +14,8 @@ export class NavService {
   messageChanged$ = this.messageChangedSource.asObservable();
   loggedIn$ = this.loggedInSource.asObservable();
 
-  title: string;
-
   changeTitle(title: string) {
     this.titleChangedSource.next(title);
-  }
-
-  getTitle() {
-    return this.title;
   }
 
   changeMessage(message: string) {

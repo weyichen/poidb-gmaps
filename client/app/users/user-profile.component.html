@@ -1,5 +1,5 @@
 <div *ngIf="user">
-  
+
   <h2>
     <span *ngIf="editing">Editing user: </span> <span>{{user.username}}</span>
     <button *ngIf="!editing" class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" (click)="editToggle()">

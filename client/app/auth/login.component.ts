@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService, NavService } from '../shared/index';
 
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private navService: NavService,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -51,6 +51,7 @@ export class LoginComponent implements OnInit {
     if (response._id) {
       this.navService.logIn(response);
       this.navService.changeMessage('Welcome, ' + response.username);
+      this.router.navigateByUrl('/users');
     } else {
       this.navService.changeMessage(response);
     }

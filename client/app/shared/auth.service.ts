@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { Subject } from 'rxjs/Subject';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -12,10 +11,6 @@ export class AuthService {
   constructor(
     private http: Http
   ) { }
-
-  private loggedInSource = new Subject<Object>();
-
-  loggedIn$ = this.loggedInSource.asObservable();
 
   login(user: Object): Promise<Object> {
     let headers = new Headers({

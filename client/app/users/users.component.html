@@ -6,7 +6,7 @@
       <a [routerLink]="['/user', user._id]">
         <i class="material-icons mdl-list__item-avatar">person</i>
       </a>
-      <span>{{user.username}}</span>
+      <span>{{user.username}}</span> <span *ngIf="user.admin"> - Admin</span>
       <span class="mdl-list__item-sub-title">{{user.email}}</span>
     </span>
     <span class="mdl-list__item-secondary-content">

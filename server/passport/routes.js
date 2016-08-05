@@ -14,13 +14,16 @@ module.exports = function(passport) {
       return;
 
     // need to place callback within passport.authenticate call
-    // if outside, will only be called if authentication is successful
+    // if placed outside, will only be called if authentication is successful
     // if failed, POST to /login will return Forbidden status
-    passport.authenticate('login', function(error, user) {
+    passport.authenticate('login', {session: true}, function(error, user) {
       if (!user) {
         res.json(req.flash().authError[0]);
         return;
       }
+      req.login(user, function(err) {
+        if (err) return next(err);
+      });
       res.json(user);
     })(req, res, next);
   });
@@ -44,6 +47,9 @@ module.exports = function(passport) {
         res.json(req.flash().authError[0]);
         return;
       }
+      req.login(user, function(err) {
+        if (err) return next(err);
+      });
       res.json(user);
     })(req, res, next);
   });
