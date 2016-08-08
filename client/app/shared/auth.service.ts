@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
 import { User } from '../shared/index';
@@ -12,6 +13,8 @@ export class AuthService {
   constructor(
     private http: Http
   ) { }
+
+  redirectUrl: string;
 
   login(user: Object): Promise<Object> {
     let headers = new Headers({
@@ -37,9 +40,18 @@ export class AuthService {
 
   getLoggedInUser(): Promise<Object> {
     return this.http.get(this.apiBase + 'loggedinuser')
-      .toPromise()
-      .then(response => response.json())
-      .catch(this.handleError);
+    .toPromise()
+    .then(response => response.json())
+    .catch(this.handleError);
+  }
+
+  getLoggedInUserObservable(): Observable<Object> {
+    return this.http.get(this.apiBase + 'loggedinuser')
+      .map((res) => res.json())
+      //.catch(this.handleObservableError);
+      // .toPromise()
+      // .then(response => response.json())
+      // .catch(this.handleError);
   }
 
   logout(): Promise<void> {
@@ -52,6 +64,13 @@ export class AuthService {
   private handleAuthResponse(response: any) {
     console.log(response);
     return response.json();
+  }
+
+  private handleObservableError(error: any) {
+    let errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    console.error(errMsg); // log to console instead
+    return Observable.throw(errMsg);
   }
 
   private handleError(error: any) {
