@@ -19,15 +19,20 @@ const routes: Routes = [
     path: 'user/:id',
     component: UserProfileComponent
   },
-  // {
-  //   path: 'editprofile/:id',
-  //   component: ProfileEditComponent,
-  //   canActivate: [AuthGuard]
-  // },
-  // {
-  //   path: 'login',
-  //   component: LoginComponent
-  // },
+  {
+    path: 'editprofile/:id',
+    component: UserProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'editprofile',
+    component: ProfileEditComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
   {
     path: '**',
     redirectTo: 'users'

@@ -2,13 +2,22 @@ var User = require('../models/user');
 
 exports.list = function(req, res) {
   User.find({})
-  .then(users => res.json({users: users}))
+  .then(users => {
+    for (user in users) {
+      // don't return hashed passwords
+      user.password = null;
+    }
+    res.json({users: users})
+  })
   .catch(err => res.send(err));
 };
 
 exports.read = function(req, res) {
   User.findById(req.params.id)
-    .then(user => res.json({user: user}))
+    .then(user => {
+      user.password = null;
+      res.json({user: user})
+    })
     .catch(() => {
       var err = 'Cannot find user ' + req.params.id;
       res.send(err);

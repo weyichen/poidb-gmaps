@@ -23,7 +23,4 @@ export class NavService {
     this.messageChangedSource.next(message);
   }
 
-  logIn(user: any) {
-    this.loggedInSource.next(user);
-  }
 }

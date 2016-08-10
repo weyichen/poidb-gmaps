@@ -25,10 +25,23 @@ module.exports = function(passport) {
   });
 
   app.get(apiBase + '/loggedinuser', function (req, res) {
+    console.log('/loggedinuser')
     if (req.user)
       res.json({ logged_in: true, user: req.user });
     else
       res.json({ logged_in: false });
+  });
+
+  app.get(apiBase + '/loggedinuser2', function (req, res) {
+    console.log('/loggedinuser2')
+    if (req.user)
+      res.json({ logged_in: true, user: req.user });
+    else
+      res.json({ logged_in: false });
+  });
+
+  app.get(apiBase + '/testroute', function(req, res) {
+    res.json({ msg: 'testroute' });
   });
 
   app.post(apiBase + '/signup', function(req, res, next) {
@@ -58,6 +71,8 @@ function usePassportStrategy(passport, strategy, req, res, next) {
       res.json({ logged_in: false, error: req.flash().authError[0] });
       return next();
     }
+    // don't store hashed password in request user object
+    user.password = null;
     req.login(user, function(err) {
       if (err) return next(err);
     });

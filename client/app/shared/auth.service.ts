@@ -46,6 +46,13 @@ export class AuthService {
     .catch(this.handleError);
   }
 
+  getLoggedInUser2(): Promise<Object> {
+    return this.http.get(this.apiBase + 'loggedinuser2')
+    .toPromise()
+    .then(response => response.json())
+    .catch(this.handleError);
+  }
+
   getLoggedInUserObservable(): Observable<Object> {
     return this.http.get(this.apiBase + 'loggedinuser')
       .map((res) => res.json())
@@ -53,6 +60,22 @@ export class AuthService {
       // .toPromise()
       // .then(response => response.json())
       // .catch(this.handleError);
+  }
+
+  getLoggedInUserObservable2(): Observable<Object> {
+    return this.http.get(this.apiBase + 'loggedinuse')
+      .map((res) => res.json())
+      .catch(this.handleObservableError);
+      // .toPromise()
+      // .then(response => response.json())
+      // .catch(this.handleError);
+  }
+
+  testRoute(): Promise<Object> {
+    return this.http.get(this.apiBase + 'testroute')
+    .toPromise()
+    .then(response => response.json())
+    .catch(this.handleError);
   }
 
   logout(): Promise<void> {

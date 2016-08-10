@@ -10,7 +10,7 @@ var userSchema = new Schema({
     unique: [true, 'Username already exists!']
   },
   password: { type: String, required: true},
-  mod_password: {type: Boolean, default: true}, // only hash password when it is modified
+  mod_password: {type: Boolean, default: true},
   name: String,
   email: String,
   admin: Boolean,
@@ -26,6 +26,7 @@ userSchema.pre('save', function(next) {
   if (!this.created_at)
     this.created_at = currentDate;
 
+  // only hash password when it is modified
   if (this.mod_password)
     this.password = bcrypt.hashSync(this.password);
   this.mod_password = false;

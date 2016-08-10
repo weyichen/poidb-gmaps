@@ -1,19 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ROUTER_DIRECTIVES, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { AuthService, AuthGuard, NavService, UserService } from './shared/index';
 
-import { UsersComponent } from './users/users.component';
-import { UserProfileComponent } from './users/user-profile.component';
-import { LoginComponent } from './auth/login.component';
-
 @Component({
   selector: 'my-app',
-  templateUrl: 'client/app/app.component.html',
-  directives: [ROUTER_DIRECTIVES],
-  providers: [ AuthService, AuthGuard, NavService, UserService]
-  //precompile: [UsersComponent, UserProfileComponent, LoginComponent]
+  templateUrl: 'client/app/app.component.html'
 })
 export class AppComponent implements OnInit {
   constructor(
