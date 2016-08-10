@@ -14,14 +14,14 @@ export class UserService {
   list(): Promise<Object[]> {
     return this.http.get(this.apiBase + 'list')
       .toPromise()
-      .then(response => response.json())
+      .then(response => response.json().users)
       .catch(this.handleError);
   }
 
   get(id: string) {
     return this.http.get(this.apiBase + id)
     .toPromise()
-    .then(response => response.json())
+    .then(response => response.json().user)
     .catch(this.handleError);
   }
 

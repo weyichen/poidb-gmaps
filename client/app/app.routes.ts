@@ -1,12 +1,11 @@
-import { provideRouter, RouterConfig } from '@angular/router';
-import { LocationStrategy, HashLocationStrategy } from "@angular/common";
+import { Routes, RouterModule } from '@angular/router';
 
 import { ProfileEditComponent, UserProfileComponent, UsersComponent } from './users/index';
 import { LoginComponent } from './auth/login.component';
 
 import { AuthGuard, AuthService, NavService } from './shared/index';
 
-const routes: RouterConfig = [
+const routes: Routes = [
   {
     path: '',
     redirectTo: 'users',
@@ -20,15 +19,15 @@ const routes: RouterConfig = [
     path: 'user/:id',
     component: UserProfileComponent
   },
-  {
-    path: 'editprofile/:id',
-    component: ProfileEditComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
+  // {
+  //   path: 'editprofile/:id',
+  //   component: ProfileEditComponent,
+  //   canActivate: [AuthGuard]
+  // },
+  // {
+  //   path: 'login',
+  //   component: LoginComponent
+  // },
   {
     path: '**',
     redirectTo: 'users'
@@ -36,9 +35,4 @@ const routes: RouterConfig = [
   }
 ];
 
-export const appRouterProviders = [
-  provideRouter(routes),
-  [ AuthGuard, AuthService ],
-  [ ]
-//  { provide: LocationStrategy, useClass: HashLocationStrategy }
-];
+export const routing = RouterModule.forRoot(routes);

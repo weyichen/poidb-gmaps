@@ -2,13 +2,13 @@ var User = require('../models/user');
 
 exports.list = function(req, res) {
   User.find({})
-  .then(users => res.json(users))
+  .then(users => res.json({users: users}))
   .catch(err => res.send(err));
 };
 
 exports.read = function(req, res) {
   User.findById(req.params.id)
-    .then(user => res.json(user))
+    .then(user => res.json({user: user}))
     .catch(() => {
       var err = 'Cannot find user ' + req.params.id;
       res.send(err);

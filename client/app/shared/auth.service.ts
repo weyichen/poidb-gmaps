@@ -3,6 +3,7 @@ import { Http, Headers } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/catch';
 
 import { User } from '../shared/index';
 
@@ -48,7 +49,7 @@ export class AuthService {
   getLoggedInUserObservable(): Observable<Object> {
     return this.http.get(this.apiBase + 'loggedinuser')
       .map((res) => res.json())
-      //.catch(this.handleObservableError);
+      .catch(this.handleObservableError);
       // .toPromise()
       // .then(response => response.json())
       // .catch(this.handleError);

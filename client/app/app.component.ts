@@ -12,8 +12,8 @@ import { LoginComponent } from './auth/login.component';
   selector: 'my-app',
   templateUrl: 'client/app/app.component.html',
   directives: [ROUTER_DIRECTIVES],
-  providers: [ AuthService, AuthGuard, NavService, UserService],
-  precompile: [UsersComponent, UserProfileComponent, LoginComponent]
+  providers: [ AuthService, AuthGuard, NavService, UserService]
+  //precompile: [UsersComponent, UserProfileComponent, LoginComponent]
 })
 export class AppComponent implements OnInit {
   constructor(
