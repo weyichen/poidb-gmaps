@@ -15,24 +15,14 @@ app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds0
 app.set('views', __dirname + '/../public');
 app.set('view engine', 'ejs');
 
-// setup appropriate database for local or Heroku
-var db, mongoose, pg, stormpath;
-if (app.get('dbmode') === 'mongodb') {
-  mongoose = require('mongoose');
-  mongoose.promise = global.Promise; // use ES6 promise library
-  mongoose.connect(app.get('mongodb-uri'), function (err) {
-    if (err) { console.log(err); return; }
-    console.log("connected to mongodb!");
-  });
-}
-else if (app.get('dbmode') === 'pg') {
-  pg = require('pg');
-  pg.defaults.ssl = true;
-}
-else if (app.get('dbmode') === 'stormpath'){
-  // stormpath = require('express-stormpath');
-  // app.use(stormpath.init(app, { cache: 'memory' }));
-}
+// db connection
+mongoose = require('mongoose');
+mongoose.promise = global.Promise; // use ES6 promise library
+mongoose.connect(app.get('mongodb-uri'), function (err) {
+  if (err) { console.log(err); return; }
+  console.log("connected to mongodb!");
+});
+
 
 // MIDDLEWARES
 
@@ -57,31 +47,6 @@ app.use(passport.session());
 
 app.use(flash());
 
-// get username for rendering
-app.use(function(request, response, next) {
-  if (request.user)
-    app.locals.username = request.user.username;
-  else
-    // remove username if user has logged out
-    app.locals.username = null;
-  next();
-});
-
-// triage any flash messages
-app.use(function(request, response, next) {
-  var flash = request.flash();
-  for (var grade in flash) {
-    response.locals[grade+'Msgs'] = flash[grade].join('\n');
-  }
-  next();
-});
-
-// DEBUG - log stuff
-app.use(function(req, res, next) {
-  //console.log("URL: " + req.originalUrl);
-  next();
-});
-
 // place all middleware before all routes
 // ROUTES
 
@@ -94,11 +59,6 @@ app.use('/api/user', userRoutes);
 // set up passport strategies and authentication routes
 require('./passport/passport')(passport);
 require('./passport/routes')(passport);
-
-app.get('/debug', function (req, res) {
-  res.locals.debug = "hello debug!";
-  res.render('views/pages/debug');
-});
 
 app.get('/', function(req, res) {
   res.sendFile('index.html', {root: __dirname + '/../public/'});

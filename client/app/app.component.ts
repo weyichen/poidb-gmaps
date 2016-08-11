@@ -37,13 +37,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.title = 'My First Angular 2 + Express App!';
 
-    // if a user is logged in, get it
-    this.authService.getLoggedInUser()
-      .then((response: any) => {
-        if (response.logged_in)
-          this.loggedInUser = response.user;
-        })
-      .catch(error => this.error = error);
+    this.getLoggedInUser();
   }
 
   logout() {
@@ -57,6 +51,15 @@ export class AppComponent implements OnInit {
           this.navService.changeMessage('Error logging out!');
         }
       })
+      .catch(error => this.error = error);
+  }
+
+  getLoggedInUser() {
+    this.authService.getLoggedInUser()
+      .then((response: any) => {
+        if (response.logged_in)
+          this.loggedInUser = response.user;
+        })
       .catch(error => this.error = error);
   }
 }

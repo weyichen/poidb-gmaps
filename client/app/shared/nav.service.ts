@@ -9,7 +9,7 @@ export class NavService {
 
   private titleChangedSource = new Subject<string>();
   private messageChangedSource = new Subject<string>();
-  private loggedInSource = new Subject<string>();
+  private loggedInSource = new Subject<Object>();
 
   titleChanged$ = this.titleChangedSource.asObservable();
   messageChanged$ = this.messageChangedSource.asObservable();
@@ -21,6 +21,10 @@ export class NavService {
 
   changeMessage(message: string) {
     this.messageChangedSource.next(message);
+  }
+
+  logIn(user: Object) {
+    this.loggedInSource.next(user);
   }
 
 }

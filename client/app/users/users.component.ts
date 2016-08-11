@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
-//import { User } from '../user';
 import { UserService, AuthService, NavService } from '../shared/index';
 
 @Component({
@@ -12,8 +11,7 @@ import { UserService, AuthService, NavService } from '../shared/index';
       background-color: #CFD8DC !important;
       color: white;
     }
-    `],
-  directives: [ROUTER_DIRECTIVES]
+    `]
 })
 export class UsersComponent implements OnInit {
   users: any[];

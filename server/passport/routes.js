@@ -1,13 +1,5 @@
 var app = require('../index');
 
-// // TODO: does nothing right now
-// // redirect routes to login page if no user is logged in
-// var isAuthenticated = function(request, response, next) {
-//   if (request.isAuthenticated())
-//     return next();
-//   next();
-// };
-
 module.exports = function(passport) {
 
   const apiBase = '/api/auth';
@@ -32,16 +24,13 @@ module.exports = function(passport) {
       res.json({ logged_in: false });
   });
 
+  // TODO: temporary workaround for edit-profile module
   app.get(apiBase + '/loggedinuser2', function (req, res) {
     console.log('/loggedinuser2')
     if (req.user)
       res.json({ logged_in: true, user: req.user });
     else
       res.json({ logged_in: false });
-  });
-
-  app.get(apiBase + '/testroute', function(req, res) {
-    res.json({ msg: 'testroute' });
   });
 
   app.post(apiBase + '/signup', function(req, res, next) {
@@ -53,6 +42,7 @@ module.exports = function(passport) {
 
   return app;
 }
+
 
 function checkRequiredFields(req, res) {
   if (!req.body.username || !req.body.password) {

@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
   error: any;
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    console.log('AuthGuard called');
 
     return this.authService.getLoggedInUserObservable()
       .map((response: any) => {

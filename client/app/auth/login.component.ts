@@ -11,7 +11,7 @@ import { AuthService, NavService } from '../shared/index';
 
 export class LoginComponent implements OnInit {
 
-  @Input() user: Object;
+  user: Object;
   signupMode: boolean;
   error: any;
 
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
     if (response.logged_in) {
       this.navService.logIn(response.user);
       this.navService.changeMessage('Welcome, ' + response.user.username);
-      this.router.navigateByUrl('/users');
+      this.router.navigateByUrl('/');
     } else {
       this.navService.changeMessage(response.error);
     }

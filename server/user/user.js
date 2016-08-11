@@ -82,6 +82,7 @@ exports.demoteAdmin = function(req, res) {
     .catch(err => res.send(err));
 }
 
+
 exports.getMap = function (req, res) {
   if (!req.user) {
     req.flash('info', 'Log in to view your saved map locations!');
