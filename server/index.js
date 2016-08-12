@@ -1,3 +1,6 @@
+/**
+  ** IMPORT EXPRESS DEPENDENCIES **
+  **/
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -6,16 +9,21 @@ var passport = require('passport');
 var flash = require('connect-flash');
 const path = require('path');
 
-var app = module.exports = express();
+var app = express();
 
+/**
+  ** CONFIG **
+  **/
 app.set('port', 5000);
-app.set('dbmode', 'mongodb');
+app.set('dbmode', 'mongodb'); // unused, currently only mongoDB
 app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds015924.mlab.com:15924/heroku_jwmv0642');
 
 app.set('views', __dirname + '/../public');
 app.set('view engine', 'ejs');
 
-// db connection
+/**
+  ** DB CONNECTION **
+  **/
 mongoose = require('mongoose');
 mongoose.promise = global.Promise; // use ES6 promise library
 mongoose.connect(app.get('mongodb-uri'), function (err) {
@@ -24,8 +32,9 @@ mongoose.connect(app.get('mongodb-uri'), function (err) {
 });
 
 
-// MIDDLEWARES
-
+/**
+  ** MIDDLEWARE **
+  **/
 app.use('/static', express.static(__dirname + '/../public'));
 app.use('/client', express.static(__dirname + '/../client'));
 app.use('/node_modules', express.static(__dirname + '/../node_modules'));
@@ -33,6 +42,7 @@ app.use('/node_modules', express.static(__dirname + '/../node_modules'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// this uses the mongoDB connection to maintain a persistent session
 app.use(session({
   secret: 'keyboard cat',
   cookie : {
@@ -48,23 +58,17 @@ app.use(passport.session());
 app.use(flash());
 
 // place all middleware before all routes
-// ROUTES
 
-var User = require('./models/user');
-
-var user = require('./user/user');
-var userRoutes = require('./user/routes');
-app.use('/api/user', userRoutes);
+/**
+  ** ROUTES **
+  **/
+app.use('/api/user', require('./user/routes'));
 
 // set up passport strategies and authentication routes
-require('./passport/passport')(passport);
-require('./passport/routes')(passport);
+require('./passport/passport');
+app.use('/api/auth', require('./passport/routes'));
 
-app.get('/', function(req, res) {
-  res.sendFile('index.html', {root: __dirname + '/../public/'});
-});
-
-// bottom catch-all to redirect all Angular app routes to the Angular router
+// this catch all redirects all non-api routes to angular, so that the angular router can work!
 app.get('*', function(req, res) {
   // ignore requests for non-existent files
   if (!path.extname(req.path)) {
@@ -75,6 +79,9 @@ app.get('*', function(req, res) {
   }
 });
 
+/**
+  ** START SERVER **
+  **/
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });

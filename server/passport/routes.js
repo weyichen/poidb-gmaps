@@ -1,48 +1,49 @@
-var app = require('../index');
+var express = require('express');
+var router = express.Router();
 
-module.exports = function(passport) {
+var passport = require('passport');
 
-  const apiBase = '/api/auth';
+router.post('/login', function(req, res, next) {
+  if (!checkRequiredFields(req, res))
+    return next();
 
-  app.post(apiBase + '/login', function(req, res, next) {
-    if (!checkRequiredFields(req, res))
-      return next();
+  usePassportStrategy(passport, 'login', req, res, next);
+});
 
-    usePassportStrategy(passport, 'login', req, res, next);
-  });
+router.get('/logout', function(req, res) {
+  req.logout();
+  res.json({ logged_out: true });
+});
 
-  app.get(apiBase + '/logout', function(req, res) {
-    req.logout();
-    res.json({ logged_out: true });
-  });
+router.get('/loggedinuser', function (req, res) {
+  console.log('/loggedinuser')
+  if (req.user)
+    res.json({ logged_in: true, user: req.user });
+  else
+    res.json({ logged_in: false });
+});
 
-  app.get(apiBase + '/loggedinuser', function (req, res) {
-    console.log('/loggedinuser')
-    if (req.user)
-      res.json({ logged_in: true, user: req.user });
-    else
-      res.json({ logged_in: false });
-  });
+// TODO: temporary workaround for edit-profile module
+router.get('/loggedinuser2', function (req, res) {
+  console.log('/loggedinuser2')
+  if (req.user)
+    res.json({ logged_in: true, user: req.user });
+  else
+    res.json({ logged_in: false });
+});
 
-  // TODO: temporary workaround for edit-profile module
-  app.get(apiBase + '/loggedinuser2', function (req, res) {
-    console.log('/loggedinuser2')
-    if (req.user)
-      res.json({ logged_in: true, user: req.user });
-    else
-      res.json({ logged_in: false });
-  });
+router.post('/signup', function(req, res, next) {
+  if (!checkRequiredFields(req, res))
+    return next();
 
-  app.post(apiBase + '/signup', function(req, res, next) {
-    if (!checkRequiredFields(req, res))
-      return next();
+  usePassportStrategy(passport, 'signup', req, res, next);
+});
 
-    usePassportStrategy(passport, 'signup', req, res, next);
-  });
+module.exports = router;
 
-  return app;
-}
-
+/**
+  ** HELPERS **
+**/
 
 function checkRequiredFields(req, res) {
   if (!req.body.username || !req.body.password) {
