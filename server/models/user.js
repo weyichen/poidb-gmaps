@@ -4,20 +4,16 @@ var bcrypt = require('bcrypt-nodejs');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-  username: {
-    type: String,
-    required: [true, 'Username cannot be blank!'],
-    unique: [true, 'Username already exists!']
-  },
-  password: { type: String, required: true},
-  mod_password: {type: Boolean, default: true},
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+
   name: String,
   email: String,
   admin: Boolean,
-  created_at: Date,
-  updated_at: Date,
 
-  locations: [{ title: String, lat: Number, lng: Number }]
+  last_active: Date,
+  created_at: Date,
+  updated_at: Date
 });
 
 userSchema.pre('save', function(next) {
@@ -26,10 +22,6 @@ userSchema.pre('save', function(next) {
   if (!this.created_at)
     this.created_at = currentDate;
 
-  // only hash password when it is modified
-  if (this.mod_password)
-    this.password = bcrypt.hashSync(this.password);
-  this.mod_password = false;
   next();
 });
 

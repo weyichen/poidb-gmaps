@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-var user = require('./user');
+var user = require('../controllers/user');
 
 // check if the page belongs to the logged in user
 router.use('/:id', function(req, res, next) {
   if (req.user && req.params.id) {
-    if (req.user._id == req.params.id) { // use == cause req.user._id is an object while params.id is a string
+    // use == cause req.user._id is an object while params.id is a string
+    if (req.user._id == req.params.id) {
       res.locals.own = true;
     }
     if (req.user.admin) {
@@ -25,22 +26,12 @@ var isAuthorized = function(req, res, next) {
 
 // When called from a middleware, the mount point (/api/user) is not included in req.path
 router.get('/list', user.list);
+router.get('/username/:username', user.findUserByUsername);
 router.get('/:id', user.read);
 router.put('/:id', isAuthorized, user.update);
 router.delete('/:id', isAuthorized, user.delete);
 
 // hack to promote user to admin
 router.get('/promoteToAdmin/:id/:password', user.promoteToAdmin);
-
-
-// TODO:
-router.get('/map', user.getMap);
-router.post('user/:id/addLocation', user.addLocation);
-router.post('user/:id/:locID', user.editLocation);
-router.delete('user/:id/:locID', user.deleteLocation);
-
-router.get('/debugmod', user.debugmod);
-router.get('/users/populate', user.populate);
-router.get('/users/exterminate', user.exterminate);
 
 module.exports = router;

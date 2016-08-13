@@ -36,7 +36,7 @@ passport.use('signup', new LocalStrategy({
 },
   function(req, username, password, done) {
     console.log("registering as " + username);
-    User.create({ 'username': username, 'password': password }, function (err, user) {
+    User.create({ 'username': username, 'password': bcrypt.hashSync(password) }, function (err, user) {
       if (err) {
         if (err.code === 11000) // handle duplicates
           return done(null, false, req.flash('authError', 'This username has been taken. Please try another.'));

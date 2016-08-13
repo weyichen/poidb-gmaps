@@ -1,7 +1,9 @@
 var express = require('express');
-var router = express.Router();
-
 var passport = require('passport');
+
+var trimUserObject = require('../controllers').trimUserObject;
+
+var router = express.Router();
 
 router.post('/login', function(req, res, next) {
   if (!checkRequiredFields(req, res))
@@ -62,8 +64,7 @@ function usePassportStrategy(passport, strategy, req, res, next) {
       res.json({ logged_in: false, error: req.flash().authError[0] });
       return next();
     }
-    // don't store hashed password in request user object
-    user.password = null;
+    user = trimUserObject(user);
     req.login(user, function(err) {
       if (err) return next(err);
     });

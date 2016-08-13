@@ -10,6 +10,7 @@ var flash = require('connect-flash');
 const path = require('path');
 
 var app = express();
+var routes = require('./routes');
 
 /**
   ** CONFIG **
@@ -25,7 +26,8 @@ app.set('view engine', 'ejs');
   ** DB CONNECTION **
   **/
 mongoose = require('mongoose');
-mongoose.promise = global.Promise; // use ES6 promise library
+// use the native promise library, as the mongoose mpromise library is deprecated
+mongoose.promise = global.Promise;
 mongoose.connect(app.get('mongodb-uri'), function (err) {
   if (err) { console.log(err); return; }
   console.log("connected to mongodb!");
@@ -54,6 +56,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+require('./config/passport');
 
 app.use(flash());
 
@@ -62,11 +65,9 @@ app.use(flash());
 /**
   ** ROUTES **
   **/
-app.use('/api/user', require('./user/routes'));
+app.use('/debug', require('./debug'));
 
-// set up passport strategies and authentication routes
-require('./passport/passport');
-app.use('/api/auth', require('./passport/routes'));
+app.use('/', routes);
 
 // this catch all redirects all non-api routes to angular, so that the angular router can work!
 app.get('*', function(req, res) {

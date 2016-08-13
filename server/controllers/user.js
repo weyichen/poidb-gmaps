@@ -1,22 +1,36 @@
+var bcrypt = require('bcrypt-nodejs');
+
 var User = require('../models/user');
+var trimUserObject = require('../controllers').trimUserObject;
 
 exports.list = function(req, res) {
   User.find({})
   .then(users => {
-    for (user in users) {
-      // don't return hashed passwords
-      user.password = null;
+    for (var i = 0; i < users.length; i++) {
+      users[i] = trimUserObject(users[i]);
     }
     res.json({users: users})
   })
   .catch(err => res.send(err));
 };
 
+exports.findUserByUsername = function(req, res) {
+  User.findOne({username: req.params.username})
+    .then(user => {
+      user = trimUserObject(user);
+      res.json({user: user});
+    })
+    .catch(() => {
+      var err = 'Cannot find user ' + req.params.id;
+      res.send(err);
+    });
+}
+
 exports.read = function(req, res) {
   User.findById(req.params.id)
     .then(user => {
-      user.password = null;
-      res.json({user: user})
+      user = trimUserObject(user);
+      res.json({user: user});
     })
     .catch(() => {
       var err = 'Cannot find user ' + req.params.id;
@@ -30,15 +44,14 @@ exports.update = function(req, res) {
       for (var property in req.body) {
       if (req.body[property]) {
         user[property] = req.body[property];
-        // prevents model from hashing an unchanged password
         if (property === 'password')
-          user['mod_password'] = true;
+          user['password'] = bcrypt.hashSync(user['password']);
       }
       }
-      user.save()
-        .then(user => res.json(user));
+      // returning user.save().exec() - an actual promise, doesn't work here
+      return user.save();
     })
-    .then() // TODO: how to get promise from user.save here?
+    .then(user => res.json(user))
     .catch(err => res.send(err));
 };
 
@@ -82,61 +95,6 @@ exports.demoteAdmin = function(req, res) {
     .catch(err => res.send(err));
 }
 
-
-exports.getMap = function (req, res) {
-  if (!req.user) {
-    req.flash('info', 'Log in to view your saved map locations!');
-    res.render('pages/map');
-  }
-
-  else {
-    User.findById(req.user._id, function(err, user) {
-      if (user) {
-        res.render('pages/map', {locations: user.locations});
-      }
-      else {
-        req.flash('error', 'cannot find user ' + req.params.id);
-        res.render('pages/map');
-      }
-    });
-  }
-};
-
-
-exports.getLocations = function(req, res) {
-}
-
-exports.addLocation = function(req, res) {
-
-}
-
-exports.editLocation = function(req, res) {
-
-}
-
-exports.deleteLocation = function(req, res) {
-
-}
-
-exports.debugmod = function(req, res) {
-  User.findById(req.user._id, function(err, user) {
-    if (user) {
-      user.admin = true;
-
-      //user.locations.push({ title: 'Sample Point', lat: 0, lng: 0 });
-
-      user.save(function (err) {
-        if (err) return handleError(err)
-        console.log('Success!');
-        res.redirect('/map');
-      });
-    } else {
-      var err = new Error('cannot find user ' + req.params.id);
-      err.status = 404;
-      next(err);
-    }
-  });
-}
 
 // Fake user database
 var users = [];
