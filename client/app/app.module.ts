@@ -4,40 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { UsersComponent } from './users/users.component';
-import { UserProfileComponent } from './users/user-profile.component';
-import { ProfileEditComponent } from './users/profile-edit.component';
+import { NavComponent } from './nav/nav.component';
 import { LoginComponent } from './auth/login.component';
 
-import { AuthService, AuthGuard, NavService, UserService } from './shared/index';
+import { SharedModule } from './shared/shared.module';
+import { UsersModule } from './users/users.module';
 
 import { routing } from './app.routes';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UsersComponent,
-    UserProfileComponent,
-    ProfileEditComponent,
-    LoginComponent
-  ],
-  imports: [
-    BrowserModule,
-    routing,
-    FormsModule,
-    HttpModule
-    // MdSlideToggleModule,
-    // MdButtonModule,
-    // MdToolbarModule,
-    // MdCardModule,
-    // MdInputModule,
-  ],
-  providers: [
-    AuthService,
-    AuthGuard,
-    NavService,
-    UserService
-  ],
-  bootstrap: [ AppComponent ]
+	declarations: [
+		AppComponent,
+		NavComponent,
+		LoginComponent
+	],
+	imports: [
+		BrowserModule,
+		routing,
+		SharedModule.forRoot(),
+		UsersModule
+	],
+	bootstrap: [ AppComponent ]
 })
 export class AppModule {}

@@ -29,7 +29,7 @@ router.get('/', function(req, res) {
   however we must unset it here before removing it, else it will still be returned, but be unmodifiable
 */
 router.get('/unset_att', function(req, res) {
-  User.collection.update({username: 'ilil'}, { $unset: {mod_password: 1} }, {multi: true, safe: true, strict: false})
+  User.collection.update({}, { $unset: {mod_password: 1} }, {multi: true, safe: true, strict: false})
     .then(() => res.json('ok'));
 })
 

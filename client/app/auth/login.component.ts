@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   private handleAuthResponse(response: any) {
     if (response.logged_in) {
       this.navService.logIn(response.user);
-      this.navService.changeMessage('Welcome, ' + response.user.username);
+      this.navService.queueMessage('Welcome, ' + response.user.username);
       this.router.navigateByUrl('/');
     } else {
       this.navService.changeMessage(response.error);

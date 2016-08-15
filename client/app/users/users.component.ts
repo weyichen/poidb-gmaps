@@ -4,56 +4,59 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { UserService, AuthService, NavService } from '../shared/index';
 
 @Component({
-  selector: 'my-users',
-  templateUrl: 'client/app/users/users.component.html',
-  styles: [`
-    .selected {
-      background-color: #CFD8DC !important;
-      color: white;
-    }
-    `]
+	selector: 'my-users',
+	templateUrl: 'client/app/users/users.component.html',
+	styles: [`
+		.selected {
+			background-color: #CFD8DC !important;
+			color: white;
+		}
+		`]
 })
 export class UsersComponent implements OnInit {
-  users: any[];
-  selectedUser: any;
-  error: any;
+	users: any[];
+	selectedUser: any;
+	error: any;
 
-  constructor(
-    private userService: UserService,
-    private authService: AuthService,
-    private navService: NavService,
-    private router: Router
-  ) { }
+	constructor(
+		private userService: UserService,
+		private authService: AuthService,
+		private navService: NavService,
+		private router: Router
+	) {
+	}
 
-  ngOnInit() {
-    this.navService.changeTitle('Users');
+	ngOnInit() {
+		console.log('userComponent ngInit');
 
-    this.getUsers();
-    this.selectedUser = this.authService.getLoggedInUser();
-  }
+		this.navService.changeTitle('Users');
 
-  getUsers() {
-    this.userService.list()
-    .then(users => this.users = users)
-  }
+		this.getUsers();
+		this.selectedUser = this.authService.getLoggedInUser();
+	}
 
-  getUser(id: string) {
-    this.userService.get(id)
-    .then(user => this.selectedUser = user);
-  }
+	getUsers() {
+		this.userService.list()
+		.then(users => this.users = users)
+	}
 
-  deleteUser(user: any, event: any) {
-    event.stopPropagation();
-    this.userService
-      .delete(user._id)
-      .catch(error => this.error = error);
-  }
+	getUser(id: string) {
+		this.userService.get(id)
+		.then(user => this.selectedUser = user);
+	}
 
-  onSelect(user: Object) {
-    this.selectedUser = user;
-  }
+	deleteUser(user: any, event: any) {
+		event.stopPropagation();
+		this.userService
+			.delete(user._id)
+			.catch(error => this.error = error);
+	}
 
-  gotoProfile() {
-    this.router.navigate(['/user', this.selectedUser._id]);
-  }
+	onSelect(user: Object) {
+		this.selectedUser = user;
+	}
+
+	gotoProfile() {
+		this.router.navigate(['/user', this.selectedUser._id]);
+	}
 }
