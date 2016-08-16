@@ -39,6 +39,8 @@ exports.read = function(req, res) {
 };
 
 exports.update = function(req, res) {
+  console.log('req.body: ' + JSON.stringify(req.body));
+
   User.findById(req.params.id)
     .then(user => {
       for (var property in req.body) {

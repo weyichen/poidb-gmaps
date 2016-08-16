@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { AuthService, NavService } from '../shared/index';
 
@@ -19,7 +20,8 @@ export class NavComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private navService: NavService,
-		private authService: AuthService
+		private authService: AuthService,
+		private titleService: Title
 	) {
 
 		/*
@@ -29,7 +31,7 @@ export class NavComponent implements OnInit {
 		*/
 		router.events.subscribe(event => {
 			if (event.constructor.name === "NavigationStart") {
-				this.title = this.defaultTitle;
+				this.setTitle(this.defaultTitle);
 				this.message = navService.getMessages();
 				this.getLoggedInUser();
 			}
@@ -39,7 +41,7 @@ export class NavComponent implements OnInit {
 			other components will use NavService to change information displayed in the nav bar
 			here we subscribe to any calls to those NavService functions
 		*/
-		navService.titleChanged$.subscribe(title => this.title = title);
+		navService.titleChanged$.subscribe(title => this.setTitle(title));
 		navService.messageChanged$.subscribe(message => this.message = message);
 		navService.loggedIn$.subscribe(user => this.loggedInUser = user);
 
@@ -47,6 +49,12 @@ export class NavComponent implements OnInit {
 
 	ngOnInit() {
 
+	}
+
+	// sets both the title in the nav bar and the browser window
+	setTitle(title: string) {
+		this.title = title;
+		this.titleService.setTitle(title);
 	}
 
 	logout() {

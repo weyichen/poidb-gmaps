@@ -21,7 +21,7 @@ router.use('/:id', function(req, res, next) {
 var isAuthorized = function(req, res, next) {
   if (res.locals.own || res.locals.admin)
     return next();
-  res.status(403).send('You are not authorized to view this page!');
+  res.status(403).send('Not authorized.');
 };
 
 // When called from a middleware, the mount point (/api/user) is not included in req.path
