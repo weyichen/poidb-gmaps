@@ -54,12 +54,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.userService
-      .put(this.user)
-      .then(user => {
-        this.user = user;
-      })
-      .catch(error => this.error = error);
+    // this.userService
+    //   .put(this.user)
+    //   .then(user => {
+    //     this.user = user;
+    //   })
+    //   .catch(error => this.error = error);
   }
 
   // goBack(savedHero: Hero = null) {

@@ -25,18 +25,16 @@ export class UserService {
     .catch(this.handleError);
   }
 
-  put(user: any): Promise<Object> {
-    console.log(user);
-
+  put(form: any, id: string): Promise<Object> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
 
-    let url = this.apiBase + user._id;
+    let url = this.apiBase + id;
 
-    return this.http.put(url, JSON.stringify(user), {headers: headers})
+    return this.http.put(url, JSON.stringify(form), {headers: headers})
       .toPromise()
-      .then(() => user)
+      .then(response => response.json())
       .catch(this.handleError);
   }
 

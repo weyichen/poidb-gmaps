@@ -59,4 +59,8 @@ export class UsersComponent implements OnInit {
 	gotoProfile() {
 		this.router.navigate(['/user', this.selectedUser._id]);
 	}
+
+	gotoEditProfile() {
+		this.router.navigate([]);
+	}
 }

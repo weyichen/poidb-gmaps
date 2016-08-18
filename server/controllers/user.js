@@ -53,8 +53,8 @@ exports.update = function(req, res) {
       // returning user.save().exec() - an actual promise, doesn't work here
       return user.save();
     })
-    .then(user => res.json(user))
-    .catch(err => res.send(err));
+    .then(user => res.json({update_ok: true}))
+    .catch(err => res.send({update_ok: false, err: err}));
 };
 
 exports.delete = function(req, res) {

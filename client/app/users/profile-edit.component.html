@@ -17,24 +17,27 @@
     <label>id: </label>{{user._id}}
   </div>
 
-  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <input [(ngModel)]="user.username" class="mdl-textfield__input" type="text" id="username">
-    <label for="username">Username</label>
-  </div>
+  <form (ngSubmit)="save(f.value)" #f="ngForm">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input [(ngModel)]="user.username" class="mdl-textfield__input" type="text" id="username" name="username">
+      <label for="username">Username</label>
+    </div>
 
-  <div class="mdl-textfield mdl-js-textfield">
-    <input [(ngModel)]="user.password" class="mdl-textfield__input" type="password" id="password">
-    <label for="password">Password</label>
-  </div>
+    <div class="mdl-textfield mdl-js-textfield">
+      <input [(ngModel)]="user.password" class="mdl-textfield__input" type="password" id="password" name="password">
+      <label for="password">Password</label>
+    </div>
 
-  <div class="mdl-textfield mdl-js-textfield">
-    <input [(ngModel)]="user.name" class="mdl-textfield__input" type="text" id="name">
-    <label for="name">Name</label>
-  </div>
+    <div class="mdl-textfield mdl-js-textfield">
+      <input [(ngModel)]="user.name" class="mdl-textfield__input" type="text" id="name" name="name">
+      <label for="name">Name</label>
+    </div>
 
-  <div class="mdl-textfield mdl-js-textfield">
-    <input [(ngModel)]="user.email" class="mdl-textfield__input" type="text" id="name">
-    <label for="name">Email</label>
-  </div>
+    <div class="mdl-textfield mdl-js-textfield">
+      <input [(ngModel)]="user.email" class="mdl-textfield__input" type="text" id="email" name="email">
+      <label for="name">Email</label>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
 
 </div>
