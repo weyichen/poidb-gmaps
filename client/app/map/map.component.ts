@@ -26,7 +26,11 @@ export class MapComponent implements OnInit, OnDestroy {
 	@Input() mapObject: any;
 	markers : Array<any>;
 	selectedLocation: number;
+
 	newLocation: any;
+	newMarker: any;
+
+	editMode: boolean;	
 
 	error: any;
 	sub: any;
@@ -84,36 +88,87 @@ export class MapComponent implements OnInit, OnDestroy {
 		User Input Methods
 	**/
 
-	selectLocation(index: number) {
-		
-		var location = this.mapObject.locations[index];
-		this.selectedLocation = index;
+	/**
+		Methods that deal with adding a new location
+	**/
+	addNewLocation(lat: number, lng: number) {
+		this.newMarker = new google.maps.Marker({
+			position: {lat: lat, lng: lng},
+			map: this.mapContainer
+		});
+		var latLng = {lat: lat, lng: lng}
+		this.mapContainer.panTo(latLng);
+		this.newLocation = latLng;
+
+		this.newMarker.addListener('click', 
+			(() => {
+				return function(e: any) {
+					this.ngZone.run(() => document.getElementById("titleInput").focus());
+				}.bind(this);
+			})()
+		);
+	}
+
+	saveNewLocation() {
+		this.mapObject.locations.push(this.newLocation);
+		this.placeMarker(this.newLocation, this.mapObject.locations.length - 1);
+		this.newMarker.setMap(null);
+		this.newMarker = null;
+		this.newLocation = null;
+	}
+
+	cancelNewLocation() {
+		if (this.newMarker) {
+			this.newMarker.setMap(null);
+			this.newMarker = null;
+			this.newLocation = null;
+		}
+	}
+
+	/**
+		Methods that deal with existing locations
+	**/
+	selectLocation(i: number) {
+		var location = this.mapObject.locations[i];
+		this.selectedLocation = i;
 		this.mapContainer.panTo({lat: location.lat, lng: location.lng});
 
 		var infoWindow = new google.maps.InfoWindow();
 		infoWindow.setContent(location.title);
-		infoWindow.open(this.mapContainer, this.markers[index]);
+		infoWindow.open(this.mapContainer, this.markers[i]);
 
 		console.log(this.selectedLocation);
 	}
 
-	addLocation(lat: number, lng: number) {
-
-		var marker = new google.maps.Marker({
-			position: {lat: lat, lng: lng},
-			map: this.mapContainer
-		});
-		this.mapContainer.panTo({lat: lat, lng: lng});
-		this.newLocation = {lat: lat, lng: lng};
+	editLocation(i: number) {
+		this.editMode = true;
+		this.selectedLocation = i;
+		var location = this.mapObject.locations[i];
+		this.mapContainer.panTo({lat: location.lat, lng: location.lng});
 	}
 
-	saveLocation() {
-
+	saveLocation(i: number) {
+		this.editMode = false;
 	}
+
+	cancelEdit() {
+		this.editMode = false;
+		this.selectedLocation = null;
+	}
+
+	removeLocation(i: number) {
+		this.mapObject.locations.splice(i, 1);
+		this.removeMarker(i);
+	}
+
+	/**
+		Methods that deal with changing the map object outside of locations
+	**/
 
 	saveMap() {
-		this.mapService.saveMap(this.mapObject)
-			.map((ok: any) => {if (ok) console.log('map saved!')});
+		console.log(this.mapObject);
+		// this.mapService.saveMap(this.mapObject)
+		// 	.map((ok: any) => {if (ok) console.log('map saved!')});
 	}
 
 	/**
@@ -121,7 +176,7 @@ export class MapComponent implements OnInit, OnDestroy {
 	**/
 
 	// gets the map markers on the specified map
-	getMockMap() {
+	private getMockMap() {
 		return {locations: [
 			{title: 'Great Barrier Reef', lat: -18.286111, lng: 147.7, description: 'The Great Barrier Reef is the world\'s largest coral reef system[1][2] composed of over 2,900 individual reefs[3] and 900 islands stretching for over 2,300 kilometres (1,400 mi) over an area of approximately 344,400 square kilometres (133,000 sq mi).[4][5] The reef is located in the Coral Sea, off the coast of Queensland, Australia.'},
 			{title: 'Uluru (Ayers Rock)', lat: -25.363, lng: 131.044, description: 'Uluru /ˌuːləˈruː/ (Pitjantjatjara: Uluṟu), also known as Ayers Rock /ˌɛərz ˈrɒk/ and officially gazetted as "Uluru / Ayers Rock",[1] is a large sandstone rock formation in the southern part of the Northern Territory in central Australia. It lies 335 km (208 mi) south west of the nearest large town, Alice Springs, 450 km (280 mi) by road.'}, 
@@ -129,40 +184,49 @@ export class MapComponent implements OnInit, OnDestroy {
 		]};
 	}
 
-	// add map markers to the map, each with a listener to select the corresponding location
-	placeMarkers() {
-		var locs = this.mapObject.locations;
+	private placeMarkers() {
 		this.markers = [];
-		for (var i=0; i<locs.length; i++) {
-			var r = locs[i];
-
-			this.markers[i] = new google.maps.Marker({
-				position: {lat: r.lat, lng: r.lng},
-				map: this.mapContainer,
-				title: r.title
-			});
-
-			// in order to retain the binding to each respective marker, we need to use a closure to add listeners		
-			this.markers[i].addListener('click', 
-				((index: number) => {
-					return function(e: any) {
-						/**
-							ngZone.run() is required: http://stackoverflow.com/questions/34592857/view-is-not-updated-on-change-in-angular2
-						**/
-						this.ngZone.run(() => this.selectLocation(index));
-					}.bind(this);
-				})(i)
-			);
-
+		var locations = this.mapObject.locations;
+		for (var i=0; i<locations.length; i++) {
+			this.placeMarker(locations[i], i);			
 		}
 	}
 
+	// add a marker to the map, each with a listener to select the corresponding location
+	private placeMarker(l: any, i: number) : any {
+		this.markers[i] = new google.maps.Marker({
+			position: {lat: l.lat, lng: l.lng},
+			map: this.mapContainer,
+			title: l.title
+		});
+
+		// in order to retain the binding to each respective marker, we need to use a closure to add listeners		
+		this.markers[i].addListener('click', 
+			((index: number) => {
+				return function(e: any) {
+					/**
+						ngZone.run() is required: http://stackoverflow.com/questions/34592857/view-is-not-updated-on-change-in-angular2
+					**/
+					this.ngZone.run(() => this.selectLocation(index));
+				}.bind(this);
+			})(i)
+		);
+	}
+
+	private removeMarker(i: number) {
+		var rmMarker = this.markers.splice(i, 1)[0];
+		rmMarker.setMap(null);
+	}
+
 	// when the map is clicked, add a marker
-	addNewMarkerListener() {		
+	private addNewMarkerListener() {		
 		this.mapContainer.addListener('click', 
 			(() => {
 				return function(e: any) {
-					this.ngZone.run(() => this.addLocation(e.latLng.lat(), e.latLng.lng()));
+					this.ngZone.run(() => {
+						this.cancelNewLocation();
+						this.addNewLocation(e.latLng.lat(), e.latLng.lng());
+					});
 				}.bind(this);
 			})()
 		);

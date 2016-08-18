@@ -4,6 +4,8 @@
 
 
 <div id="locList" class="column" *ngIf="mapObject">
+	<button (click)="saveMap()">Save Map</button>
+
 	<ul>
 		<li *ngIf="newLocation" id="newLocation">
 			<div>   
@@ -13,14 +15,39 @@
 			<div>
 				<textarea [(ngModel)]="newLocation.description" id="descriptionInput"></textarea>
 			</div>
+			<div>
+				<button (click)="saveNewLocation()">Save</button>
+				<button (click)="cancelNewLocation()">Discard</button>
+			</div>
 		</li>
 
 		<li *ngFor="let location of mapObject.locations; let i = index" (click)="selectLocation(i)">
-			<div>{{i}}
-				<span class="title">{{location.title}}</span> 
-				<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+			<div *ngIf="!editMode || selectedLocation!==i">
+				<div>{{i}}
+					<span class="title">{{location.title}}</span> 
+					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+				</div>
+				<div class="description" *ngIf="selectedLocation==i">{{location.description}}</div>
+				<div>
+					<button (click)="editLocation(i)">Edit</button>
+					<button (click)="removeLocation(i)">Remove</button>
+				</div>
 			</div>
-			<div class="description" *ngIf="selectedLocation==i">{{location.description}}</div>
+
+			<div *ngIf="editMode && selectedLocation===i">
+				<div>   
+					<span class="title"><input [(ngModel)]="location.title" type="text" id="titleInput" placeholder="Title" /></span>
+					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+				</div>
+				<div>
+					<textarea [(ngModel)]="location.description" id="descriptionInput"></textarea>
+				</div>
+				<div>
+					<button (click)="saveLocation(i)">Save</button>
+					<button (click)="cancelEdit()">Discard</button>
+				</div>
+			</div>
+
 		</li>
 	</ul>
 </div>
