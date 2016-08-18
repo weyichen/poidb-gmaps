@@ -1,10 +1,11 @@
 /**
   ** IMPORT EXPRESS DEPENDENCIES **
-  **/
+**/
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+require('./config/passport');
 var passport = require('passport');
 var flash = require('connect-flash');
 const path = require('path');
@@ -14,7 +15,7 @@ var routes = require('./routes');
 
 /**
   ** CONFIG **
-  **/
+**/
 app.set('port', 5000);
 app.set('dbmode', 'mongodb'); // unused, currently only mongoDB
 app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds015924.mlab.com:15924/heroku_jwmv0642');
@@ -24,19 +25,19 @@ app.set('view engine', 'ejs');
 
 /**
   ** DB CONNECTION **
-  **/
+**/
 mongoose = require('mongoose');
 // use the native promise library, as the mongoose mpromise library is deprecated
 mongoose.promise = global.Promise;
 mongoose.connect(app.get('mongodb-uri'), function (err) {
-  if (err) { console.log(err); return; }
+  if (err) console.log(err);
   console.log("connected to mongodb!");
 });
 
 
 /**
   ** MIDDLEWARE **
-  **/
+**/
 app.use('/static', express.static(__dirname + '/../public'));
 app.use('/client', express.static(__dirname + '/../client'));
 app.use('/node_modules', express.static(__dirname + '/../node_modules'));
@@ -56,7 +57,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-require('./config/passport');
 
 app.use(flash());
 

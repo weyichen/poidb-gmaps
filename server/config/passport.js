@@ -3,14 +3,19 @@ var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
 
 var User = require('../models/user');
+var trimUserObject = require('../controllers').trimUserObject;
 
+/**
+  passport stores only what is specified in serializeUser in the cookie
+  on subsequent calls to req.user, deserializeUser is called to retrieve the user object
+**/
 passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
-    done(err, user);
+    done(err, trimUserObject(user));
   });
 });
 

@@ -65,10 +65,15 @@ function usePassportStrategy(passport, strategy, req, res, next) {
       return next();
     }
     user = trimUserObject(user);
+
     req.login(user, function(err) {
-      if (err) return next(err);
+      if (err) 
+        res.json({ logged_in: false, error: err });
+      else {
+        res.json({ logged_in: true, user: req.user });
+      }
+      return next();
     });
-    res.json({ logged_in: true, user: req.user });
-    return next();
+
   })(req, res, next);
 }
