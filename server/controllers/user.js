@@ -44,11 +44,11 @@ exports.update = function(req, res) {
   User.findById(req.params.id)
     .then(user => {
       for (var property in req.body) {
-      if (req.body[property]) {
         user[property] = req.body[property];
-        if (property === 'password')
+
+        // leave the password unchanged if the field is blank
+        if (property === 'password' && user[property] !== "")
           user['password'] = bcrypt.hashSync(user['password']);
-      }
       }
       // returning user.save().exec() - an actual promise, doesn't work here
       return user.save();

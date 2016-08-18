@@ -26,6 +26,8 @@ export class UserService {
   }
 
   put(user: any): Promise<Object> {
+    console.log(user);
+
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
