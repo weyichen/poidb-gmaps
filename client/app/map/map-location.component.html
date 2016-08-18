@@ -1,0 +1,7 @@
+<div ngIf="location">
+	<div>
+		<span class="title">{{location.title}}</span> 
+		<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+	</div>
+	<div class="description" *ngIf="selectedLocation===i">{{location.description}}</div>
+</div>

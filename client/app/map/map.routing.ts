@@ -6,6 +6,10 @@ import { AuthGuard, AuthService, NavService } from '../shared/index';
 
 const routes: Routes = [
 	{
+		path: 'maps/:id',
+		component: MapComponent
+	},
+	{
 		path: 'maps',
 		component: MapComponent
 	}

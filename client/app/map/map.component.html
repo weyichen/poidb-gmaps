@@ -1,2 +1,26 @@
-Map
-<div id="googleMap" style="width:1000px;height:600px;"></div>
+<div id="mapContainer" class="column">
+	<img src="http://ichef.bbci.co.uk/wwhp/624/cpsprodpb/13B96/production/_90809708_gettyimages-88996304.jpg">
+</div>
+
+
+<div id="locList" class="column" *ngIf="mapObject">
+	<ul>
+		<li *ngIf="newLocation" id="newLocation">
+			<div>   
+				<span class="title"><input [(ngModel)]="newLocation.title" type="text" id="titleInput" placeholder="Title" /></span>
+				<span class="coordinates">{{newLocation.lat}}, {{newLocation.lng}}</span>
+			</div>
+			<div>
+				<textarea [(ngModel)]="newLocation.description" id="descriptionInput"></textarea>
+			</div>
+		</li>
+
+		<li *ngFor="let location of mapObject.locations; let i = index" (click)="selectLocation(i)">
+			<div>{{i}}
+				<span class="title">{{location.title}}</span> 
+				<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+			</div>
+			<div class="description" *ngIf="selectedLocation==i">{{location.description}}</div>
+		</li>
+	</ul>
+</div>

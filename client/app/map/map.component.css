@@ -1,0 +1,54 @@
+ul {
+  list-style-type: none;
+  background: #3399ff;
+  padding: 2px;
+}
+
+li {
+  background: #cce5ff;
+  margin: 5px;
+  padding: 5px;
+}
+
+input, textarea{
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid black;
+  padding: 5px;
+}
+
+.column {
+  float: left;
+  height: 100%;
+}
+
+.coordinates {
+  float: right
+}
+
+.title {
+  font-weight: bold;
+}
+
+#mapContainer {
+  width: 60%;
+  height: 100%;
+}
+
+#locList {
+  width: 40%;
+}
+
+#newLocation {
+  background: #ffaaaa;
+}
+
+#titleInput {
+  width: 60%;
+}
+
+#descriptionInput {
+  width: 100%;
+  height: 4em;
+  box-sizing: border-box;
+}
