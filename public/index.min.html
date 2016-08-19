@@ -17,11 +17,8 @@
      <script src="static/vendor/js/Reflect.js"></script>
      <script src="static/vendor/js/system.js"></script>
 
-    <!-- 2. Configure SystemJS for development -->
-    <script src="static/js/systemjs.config.js"></script>
-    <script>
-      System.import('app').catch(function(err){ console.error(err); });
-    </script>
+    <!-- 2. Load minified bundle for production -->
+    <script src="static/js/bundle.min.js"></script>
     
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA"></script>
   </head>

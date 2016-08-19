@@ -16,12 +16,21 @@ var routes = require('./routes');
 /**
   ** CONFIG **
 **/
+app.set('production', process.env.PRODUCTION || false);
 app.set('port', 5000);
 app.set('dbmode', 'mongodb'); // unused, currently only mongoDB
 app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds015924.mlab.com:15924/heroku_jwmv0642');
 
 app.set('views', __dirname + '/../public');
 app.set('view engine', 'ejs');
+
+
+var indexFile;
+if (app.get('production')) {
+  indexFile = "index.min.html";
+} else {
+  indexFile = 'index.html';
+}
 
 /**
   ** DB CONNECTION **
@@ -40,7 +49,7 @@ mongoose.connect(app.get('mongodb-uri'), function (err) {
 **/
 app.use('/static', express.static(__dirname + '/../public'));
 app.use('/client', express.static(__dirname + '/../client'));
-app.use('/node_modules', express.static(__dirname + '/../node_modules'));
+// app.use('/node_modules', express.static(__dirname + '/../node_modules'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -73,7 +82,7 @@ app.use('/', routes);
 app.get('*', function(req, res) {
   // ignore requests for non-existent files
   if (!path.extname(req.path)) {
-    res.sendFile('index.html', {root: __dirname + '/../public/'});
+    res.sendFile(indexFile, {root: __dirname + '/../public/'});
   }
   else {
     res.status(404).end();
