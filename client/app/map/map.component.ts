@@ -7,10 +7,10 @@ import { MapService } from './map.service';
 
 /**
 	What the Maps Component should do:
+
 	1. When I click on the map, a new marker should be added, and brings up a menu to edit its title and description, save it, or remove it. Before saving, clicking on the marker again should remove it.
 
 	2. When I click on an existing marker, the same menu should be displayed.
-
 **/
 
 @Component({
@@ -21,16 +21,16 @@ import { MapService } from './map.service';
 export class MapComponent implements OnInit, OnDestroy {
 	private noMapMode = false;
 
-	mapContainer: any;
-
 	@Input() mapObject: any;
-	markers : Array<any>;
-	selectedLocation: number;
 
-	newLocation: any;
+	mapContainer: any;
+	markers: Array<any>;
+	infoWindows: Array<any>;
 	newMarker: any;
 
-	editMode: boolean;	
+	newLocation: any;
+	selectedLocation: number;
+	editMode: boolean;
 
 	error: any;
 	sub: any;
@@ -68,13 +68,13 @@ export class MapComponent implements OnInit, OnDestroy {
 				.subscribe((map: any) => {
 					this.mapObject = map;
 					if (!this.noMapMode)
-						this.placeMarkers();
+						this.placeMarkersAndInfoWindows();
 				})
 			} else {
 				this.navigated = false;
 				this.mapObject = this.getMockMap();
 				if (!this.noMapMode)
-					this.placeMarkers();
+					this.placeMarkersAndInfoWindows();
 			}
 		});
 
@@ -91,12 +91,27 @@ export class MapComponent implements OnInit, OnDestroy {
 	/**
 		Methods that deal with adding a new location
 	**/
+
+	/** ADD NEW LOCATION
+		reset interface
+			close edit marker dialog
+			close new marker dialog
+			close selected marker dialog
+			remove new marker
+		open new marker dialog
+		focus to title field - NOT IMPLEMENTED
+		add marker at location clicked
+		pan to location clicked
+	**/
 	addNewLocation(lat: number, lng: number) {
+		this.resetInterface();
+
 		this.newMarker = new google.maps.Marker({
 			position: {lat: lat, lng: lng},
+			label: '*',
 			map: this.mapContainer
 		});
-		var latLng = {lat: lat, lng: lng}
+		var latLng = {lat: lat, lng: lng};
 		this.mapContainer.panTo(latLng);
 		this.newLocation = latLng;
 
@@ -109,56 +124,80 @@ export class MapComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	/**	SAVE NEW LOCATION
+		push to mapObject
+		place new marker
+		open new InfoWindow
+		reset interface
+	**/
 	saveNewLocation() {
+		var i = this.mapObject.locations.length;
 		this.mapObject.locations.push(this.newLocation);
-		this.placeMarker(this.newLocation, this.mapObject.locations.length - 1);
-		this.newMarker.setMap(null);
-		this.newMarker = null;
-		this.newLocation = null;
+		this.resetInterface();
+		this.placeMarker(i);
+		this.placeInfoWindow(i);
+		this.openInfoWindow(i);
 	}
 
+	/**	SAVE NEW LOCATION
+		reset interface
+	**/
 	cancelNewLocation() {
-		if (this.newMarker) {
-			this.newMarker.setMap(null);
-			this.newMarker = null;
-			this.newLocation = null;
-		}
+		this.resetInterface();
 	}
 
 	/**
 		Methods that deal with existing locations
 	**/
+
+	/**	SELECT LOCATION
+		reset interface
+		select location
+		open info dialog
+		pan to location
+		open info window
+	**/
 	selectLocation(i: number) {
+		this.resetInterface();
+
 		var location = this.mapObject.locations[i];
 		this.selectedLocation = i;
 		this.mapContainer.panTo({lat: location.lat, lng: location.lng});
-
-		var infoWindow = new google.maps.InfoWindow();
-		infoWindow.setContent(location.title);
-		infoWindow.open(this.mapContainer, this.markers[i]);
-
-		console.log(this.selectedLocation);
+		this.openInfoWindow(i);
 	}
 
+	/**	EDIT LOCATION
+		reset interface
+		select location
+		open edit dialog
+	**/
 	editLocation(i: number) {
+		this.selectLocation(i);
 		this.editMode = true;
-		this.selectedLocation = i;
-		var location = this.mapObject.locations[i];
-		this.mapContainer.panTo({lat: location.lat, lng: location.lng});
 	}
 
+	/**	SAVE LOCATION
+		reset interface
+		push changes to server -- NOT IMPLEMENTED
+	**/
 	saveLocation(i: number) {
-		this.editMode = false;
+		this.resetInterface();
+		this.selectedLocation = i;
+		this.closeInfoWindow(i);
+		this.placeInfoWindow(i);
+		this.openInfoWindow(i);
 	}
 
 	cancelEdit() {
-		this.editMode = false;
-		this.selectedLocation = null;
+		this.resetInterface();
 	}
 
 	removeLocation(i: number) {
-		this.mapObject.locations.splice(i, 1);
+		this.resetInterface();
+		this.closeInfoWindow(i);
 		this.removeMarker(i);
+		this.mapObject.locations.splice(i, 1);
+
 	}
 
 	/**
@@ -167,8 +206,16 @@ export class MapComponent implements OnInit, OnDestroy {
 
 	saveMap() {
 		console.log(this.mapObject);
-		// this.mapService.saveMap(this.mapObject)
-		// 	.map((ok: any) => {if (ok) console.log('map saved!')});
+
+		this.mapService.saveMap(this.mapObject)
+		 	.subscribe((res: any) => {
+		 		if (res.ok) {
+		 			console.log('map saved!');
+		 			this.mapObject.__v++; // simple versioning for now
+		 		}
+		 		else
+		 			console.log(res.err);
+		 	});
 	}
 
 	/**
@@ -184,24 +231,38 @@ export class MapComponent implements OnInit, OnDestroy {
 		]};
 	}
 
-	private placeMarkers() {
+	private resetInterface() {
+		this.editMode = false;
+		this.selectedLocation = null;
+		this.newLocation = null;
+		if (this.newMarker) {
+			this.newMarker.setMap(null);
+			this.newMarker = null;
+		}
+	}
+
+	private placeMarkersAndInfoWindows() {
 		this.markers = [];
+		this.infoWindows = [];
 		var locations = this.mapObject.locations;
 		for (var i=0; i<locations.length; i++) {
-			this.placeMarker(locations[i], i);			
+			this.placeMarker(i);
+			this.placeInfoWindow(i);		
 		}
 	}
 
 	// add a marker to the map, each with a listener to select the corresponding location
-	private placeMarker(l: any, i: number) : any {
-		this.markers[i] = new google.maps.Marker({
+	private placeMarker(i: number) : any {
+		var l = this.mapObject.locations[i];
+		var marker = new google.maps.Marker({
 			position: {lat: l.lat, lng: l.lng},
+			label: (i+1).toString(),
 			map: this.mapContainer,
 			title: l.title
 		});
 
 		// in order to retain the binding to each respective marker, we need to use a closure to add listeners		
-		this.markers[i].addListener('click', 
+		marker.addListener('click', 
 			((index: number) => {
 				return function(e: any) {
 					/**
@@ -211,11 +272,42 @@ export class MapComponent implements OnInit, OnDestroy {
 				}.bind(this);
 			})(i)
 		);
+		this.markers[i] = marker;
 	}
 
 	private removeMarker(i: number) {
 		var rmMarker = this.markers.splice(i, 1)[0];
 		rmMarker.setMap(null);
+	}
+
+	private placeInfoWindow(i: number) {
+		var iW = new google.maps.InfoWindow();
+		iW.opened = false;
+		iW.setContent(this.mapObject.locations[i].title);
+		iW.addListener('closeclick', 
+			((index: number) => {
+				return function(e: any) {
+					this.ngZone.run(() => this.infoWindows[i].opened = false);
+				}.bind(this);
+			})(i)
+		);
+		this.infoWindows[i] = iW;
+	}
+
+	private openInfoWindow(i: number) {
+		var iW = this.infoWindows[i];
+		if (!iW.opened) {
+			iW.open(this.mapContainer, this.markers[i]);
+			iW.opened = true;
+		}
+	}
+
+	private closeInfoWindow(i: number) {
+		var iW = this.infoWindows[i];
+		if (iW.opened) {
+			iW.close();
+			iW.opened = false;
+		}
 	}
 
 	// when the map is clicked, add a marker
@@ -224,7 +316,6 @@ export class MapComponent implements OnInit, OnDestroy {
 			(() => {
 				return function(e: any) {
 					this.ngZone.run(() => {
-						this.cancelNewLocation();
 						this.addNewLocation(e.latLng.lat(), e.latLng.lng());
 					});
 				}.bind(this);

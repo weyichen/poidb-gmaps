@@ -18,7 +18,16 @@ exports.get = function(req, res) {
 }
 
 exports.edit = function(req, res) {
-
+	console.log(req.body);
+	Map.findById(req.params.id)
+		.then(map => {
+			for (var property in req.body) {
+        		map[property] = req.body[property];
+			}
+			return map.save();
+		})
+		.then(user => res.json({ok: true}))
+    	.catch(err => res.send({ok: false, err: err}));
 }
 
 exports.delete = function(req, res) {

@@ -21,13 +21,14 @@
 			</div>
 		</li>
 
-		<li *ngFor="let location of mapObject.locations; let i = index" (click)="selectLocation(i)">
+		<li *ngFor="let location of mapObject.locations; let i = index">
 			<div *ngIf="!editMode || selectedLocation!==i">
-				<div>{{i}}
+				<div (click)="selectLocation(i)">
+					{{i+1}}.
 					<span class="title">{{location.title}}</span> 
 					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
 				</div>
-				<div class="description" *ngIf="selectedLocation==i">{{location.description}}</div>
+				<div class="description" *ngIf="selectedLocation===i">{{location.description}}</div>
 				<div>
 					<button (click)="editLocation(i)">Edit</button>
 					<button (click)="removeLocation(i)">Remove</button>

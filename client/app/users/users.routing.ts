@@ -2,7 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ProfileEditComponent, UserProfileComponent, UsersComponent } from './index';
 
-import { AuthGuard, AuthService, NavService } from '../shared/index';
+import { AuthGuard, AdminGuard, AuthService, NavService } from '../shared/index';
 
 const routes: Routes = [
 	{
@@ -14,9 +14,9 @@ const routes: Routes = [
 		component: UserProfileComponent
 	},
 	{
-		path: 'editprofile/:id',
-		component: UserProfileComponent,
-		canActivate: [AuthGuard]
+		path: 'edit_user/:id',
+		component: ProfileEditComponent,
+		canActivate: [AdminGuard]
 	},
 	{
 		path: 'editprofile',

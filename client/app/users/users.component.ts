@@ -60,7 +60,7 @@ export class UsersComponent implements OnInit {
 		this.router.navigate(['/user', this.selectedUser._id]);
 	}
 
-	gotoEditProfile() {
-		this.router.navigate([]);
+	gotoEditProfile(id: string) {
+		this.router.navigate(['edit_user', id]);
 	}
 }

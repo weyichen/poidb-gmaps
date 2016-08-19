@@ -10,7 +10,10 @@
       <span *ngIf="user.admin"> - Admin</span>
       <span class="mdl-list__item-sub-title">{{user.email}}</span>
     </span>
-    <span class="mdl-list__item-secondary-content">
+    <span class="">
+      <button class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" (click)="gotoEditProfile(user._id)">
+        <i class="material-icons">edit</i>
+      </button>
       <button class="mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" (click)="deleteUser(user, $event)">
         <i class="material-icons">delete</i>
       </button>

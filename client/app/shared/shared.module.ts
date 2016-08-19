@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import { AuthService, AuthGuard, NavService, UserService } from './index';
+import { AuthService, AuthGuard, AdminGuard, NavService, UserService } from './index';
 
 @NgModule({
 	imports: [ CommonModule, HttpModule ],
@@ -16,7 +16,8 @@ export class SharedModule {
 			ngModule: SharedModule,
 			providers: [ 
 				AuthService, 
-				AuthGuard, 
+				AuthGuard,
+				AdminGuard,
 				NavService, 
 				UserService
 			]
