@@ -17,7 +17,7 @@ var routes = require('./routes');
   ** CONFIG **
 **/
 app.set('production', process.env.PRODUCTION || false);
-app.set('port', 5000);
+app.set('port', process.env.PORT || 5000);
 app.set('dbmode', 'mongodb'); // unused, currently only mongoDB
 app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds015924.mlab.com:15924/heroku_jwmv0642');
 
