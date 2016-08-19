@@ -49,7 +49,7 @@ mongoose.connect(app.get('mongodb-uri'), function (err) {
 **/
 app.use('/static', express.static(__dirname + '/../public'));
 app.use('/client', express.static(__dirname + '/../client'));
-// app.use('/node_modules', express.static(__dirname + '/../node_modules'));
+app.use('/node_modules', express.static(__dirname + '/../node_modules'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

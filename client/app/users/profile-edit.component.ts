@@ -43,7 +43,7 @@ export class ProfileEditComponent implements OnInit {
 					doesn't work even after removing the two immediately preceeding calls:
 					in app.component and auth-guard
 				*/
-				this.authService.getLoggedInUser2()
+				this.authService.getLoggedInUser()
 					.then((response: any) => {
 						this.user = response.user;
 						this.navService.changeTitle('Editing your profile');

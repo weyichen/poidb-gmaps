@@ -1,18 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, forwardRef } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
 
-import { User } from '../shared/index';
+import { User, NavService } from '../shared/index';
 
 @Injectable()
 export class AuthService {
 	private apiBase = 'api/auth/';
 
 	constructor(
-		private http: Http
+		private http: Http,
+		/** Super duper solution: http://stackoverflow.com/questions/35117029/injecting-services-into-services-in-angular2
+			http://blog.thoughtram.io/angular/2015/09/03/forward-references-in-angular-2.html
+		**/
+		private navService: NavService
 	) { }
 
 	redirectUrl: string;
@@ -40,6 +44,8 @@ export class AuthService {
 	}
 
 	getLoggedInUser(): Promise<Object> {
+		this.navService.changeMessage('yadada')
+
 		return this.http.get(this.apiBase + 'loggedinuser')
 		.toPromise()
 		.then(response => response.json())

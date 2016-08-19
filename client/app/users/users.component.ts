@@ -27,8 +27,6 @@ export class UsersComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log('userComponent ngInit');
-
 		this.navService.changeTitle('Users');
 
 		this.getUsers();
