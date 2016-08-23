@@ -44,8 +44,6 @@ export class AuthService {
 	}
 
 	getLoggedInUser(): Promise<Object> {
-		this.navService.changeMessage('yadada')
-
 		return this.http.get(this.apiBase + 'loggedinuser')
 		.toPromise()
 		.then(response => response.json())

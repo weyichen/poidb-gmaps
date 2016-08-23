@@ -1,0 +1,67 @@
+<div id="mapContainer" class="column">
+	<img src="http://ichef.bbci.co.uk/wwhp/624/cpsprodpb/13B96/production/_90809708_gettyimages-88996304.jpg">
+</div>
+
+<app-map-marker *ngIf="newLocation"
+	[mapContainer]="mapContainer"
+	[location]="newLocation"
+	[index]="-1"
+	(onClick)="newMarkerClicked($event)">		
+</app-map-marker>
+
+<app-map-marker *ngFor="let location of mapObject?.locations; let i = index"
+	[mapContainer]="mapContainer"
+	[location]="location"
+	[index]="i"
+	(onClick)="markerClicked($event)">		
+</app-map-marker>
+
+<div id="locList" class="column" *ngIf="mapObject">
+	<button (click)="saveMap()">Save Map</button>
+
+	<ul>
+		<li *ngIf="newLocation" id="newLocation">
+			<div>   
+				<span class="title"><input [(ngModel)]="newLocation.title" type="text" id="titleInput" placeholder="Title" /></span>
+				<span class="coordinates">{{newLocation.lat}}, {{newLocation.lng}}</span>
+			</div>
+			<div>
+				<textarea [(ngModel)]="newLocation.description" id="descriptionInput"></textarea>
+			</div>
+			<div>
+				<button (click)="saveNewLocation()">Save</button>
+				<button (click)="cancelNewLocation()">Discard</button>
+			</div>
+		</li>
+
+		<li *ngFor="let location of mapObject.locations; let i = index">
+			<div *ngIf="!editMode || selectedLocation!==i">
+				<div (click)="selectLocation(i)">
+					{{i+1}}.
+					<span class="title">{{location.title}}</span> 
+					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+				</div>
+				<div class="description" *ngIf="selectedLocation===i">{{location.description}}</div>
+				<div>
+					<button (click)="editLocation(i)">Edit</button>
+					<button (click)="removeLocation(i)">Remove</button>
+				</div>
+			</div>
+
+			<div *ngIf="editMode && selectedLocation===i">
+				<div>   
+					<span class="title"><input [(ngModel)]="location.title" type="text" id="titleInput" placeholder="Title" /></span>
+					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
+				</div>
+				<div>
+					<textarea [(ngModel)]="location.description" id="descriptionInput"></textarea>
+				</div>
+				<div>
+					<button (click)="saveLocation(i)">Save</button>
+					<button (click)="cancelEdit()">Discard</button>
+				</div>
+			</div>
+
+		</li>
+	</ul>
+</div>

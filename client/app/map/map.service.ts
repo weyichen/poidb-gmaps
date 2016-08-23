@@ -12,6 +12,16 @@ export class MapService {
 
 	}
 
+	mapContainer: any;
+
+	initGoogleMap() : void {
+		
+	}
+
+	getGoogleMap(): any {
+		return this.mapContainer;
+	}
+
 	// create a new map belonging to the logged in user
 	newMap(map: any) : Observable<boolean> {
 		let headers = new Headers({

@@ -30,8 +30,6 @@ export class NavComponent implements OnInit {
 			change app title to the default, which will display if child component does not have its own component
 		*/
 		router.events.subscribe(event => {
-			console.log(event);
-
 			if (event.constructor.name === "NavigationStart") {
 				this.setTitle(this.defaultTitle);
 				this.message = navService.getMessages();
