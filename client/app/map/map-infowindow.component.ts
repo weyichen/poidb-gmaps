@@ -17,13 +17,13 @@ export class MapInfowindow implements OnInit, OnDestroy {
 	@Input() marker: any;
 
 	@Input()
-	set location(l: any) {
+	set title(t: any) {
 		if (this.infoWindow) {
 			this.infoWindow.close();
 		}
 
 		var iW = new google.maps.InfoWindow();
-		iW.setContent(l.title);
+		iW.setContent(t);
 		iW.addListener('closeclick', 
 			(() => {
 				return function(e: any) {

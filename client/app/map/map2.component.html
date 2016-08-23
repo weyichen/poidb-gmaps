@@ -2,18 +2,21 @@
 	<img src="http://ichef.bbci.co.uk/wwhp/624/cpsprodpb/13B96/production/_90809708_gettyimages-88996304.jpg">
 </div>
 
+<app-map-marker *ngFor="let location of mapObject?.locations; let i = index"
+	[mapContainer]="mapContainer"
+	[location]="{lat: location.lat, lng: location.lng}"
+	[title]="location.title"
+	[index]="i"
+	(onClick)="markerClicked($event)">		
+</app-map-marker>
+
+<!-- new location marker must be placed after other markers, else it will mess up the order of the ViewChildren -->
 <app-map-marker *ngIf="newLocation"
 	[mapContainer]="mapContainer"
 	[location]="newLocation"
+	[title]="newLocation.title"
 	[index]="-1"
 	(onClick)="newMarkerClicked($event)">		
-</app-map-marker>
-
-<app-map-marker *ngFor="let location of mapObject?.locations; let i = index"
-	[mapContainer]="mapContainer"
-	[location]="location"
-	[index]="i"
-	(onClick)="markerClicked($event)">		
 </app-map-marker>
 
 <div id="locList" class="column" *ngIf="mapObject">

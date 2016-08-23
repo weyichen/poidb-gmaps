@@ -95,6 +95,7 @@ export class Map2Component implements OnInit, OnDestroy, AfterViewInit {
 		Menu Input
 	**/
 	addNewLocation(lat: number, lng: number) {
+		this.resetInterface();
 		var latLng = {lat: lat, lng: lng};
 		this.mapContainer.panTo(latLng);
 		this.newLocation = latLng;
@@ -105,7 +106,7 @@ export class Map2Component implements OnInit, OnDestroy, AfterViewInit {
 		var i = this.mapObject.locations.length;
 		this.mapObject.locations.push(this.newLocation);
 		this.resetInterface();
-		this.markerList.toArray()[i].openIW;
+		this.markerList.toArray()[i].openIW();
 	}
 
 	cancelNewLocation() {
@@ -113,6 +114,7 @@ export class Map2Component implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	selectLocation(i: number) {
+		this.resetInterface();
 		var l = this.mapObject.locations[i];
 		this.selectedLocation = i;
 		this.mapContainer.panTo({lat: l.lat, lng: l.lng});
@@ -134,6 +136,7 @@ export class Map2Component implements OnInit, OnDestroy, AfterViewInit {
 		*/
 		this.changeDetectorRef.detectChanges();
 		this.markerList.toArray()[i].openIW();
+		console.log(this.markerList.toArray()[i].getMarker());
 	}
 
 	cancelEdit() {
