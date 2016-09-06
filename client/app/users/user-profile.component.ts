@@ -34,7 +34,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           .then(user => {
             if (user) {
               this.user = user;
-              this.navService.changeTitle('Editing user ' + user.username);
+              this.navService.changeTitle(user.username + '\'s Profile');
             }
           })
           .catch((error) => console.error(error));
