@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
+import 'rxjs/add/operator/do';
+
 import { AuthService } from './index';
 
 @Injectable()
@@ -14,14 +16,17 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
-    return this.authService.getLoggedInUserObservable()
+    //return true;
+
+    return this.authService.getLoggedInUser()
       .map((response: any) => {
-        if (response.logged_in) {
+        if (response.ok) {
           return true;
         } else {
           return false;
         }
       });
+    
   }
 }
 
@@ -36,9 +41,9 @@ export class AdminGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
-    return this.authService.getLoggedInUserObservable()
+    return this.authService.getLoggedInUser()
       .map((response: any) => {
-        if (response.logged_in && response.user.admin) {
+        if (response.ok && response.data.admin) {
           return true;
         } else {
           return false;

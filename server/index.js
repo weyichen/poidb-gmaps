@@ -16,10 +16,9 @@ var routes = require('./routes');
 /**
   ** CONFIG **
 **/
-app.set('production', process.env.PRODUCTION || false);
-app.set('port', process.env.PORT || 5000);
-app.set('dbmode', 'mongodb'); // unused, currently only mongoDB
-app.set('mongodb-uri', 'mongodb://heroku_jwmv0642:vsjp1seocg6di61eo4vv1hogei@ds015924.mlab.com:15924/heroku_jwmv0642');
+const CF = require('./config');
+app.set('production', process.env.PRODUCTION || CF.PRODUCTION_MODE);
+app.set('port', process.env.PORT || CF.PORT);
 
 app.set('views', __dirname + '/../public');
 app.set('view engine', 'ejs');
@@ -38,9 +37,9 @@ if (app.get('production')) {
 mongoose = require('mongoose');
 // use the native promise library, as the mongoose mpromise library is deprecated
 mongoose.promise = global.Promise;
-mongoose.connect(app.get('mongodb-uri'), function (err) {
+mongoose.connect(CF.MONGODB_URI, function (err) {
   if (err) console.log(err);
-  console.log("connected to mongodb!");
+  else console.log("connected to mongodb!");
 });
 
 
@@ -56,9 +55,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // this uses the mongoDB connection to maintain a persistent session
 app.use(session({
-  secret: 'keyboard cat',
+  secret: CF.SESSION_SECRET,
   cookie : {
-    maxAge: 3600000
+    maxAge: CF.COOKIE_MAXAGE
   },
   store: new MongoStore({mongooseConnection:mongoose.connection}),
   resave: true,
@@ -73,8 +72,10 @@ app.use(flash());
 
 /**
   ** ROUTES **
-  **/
-app.use('/debug', require('./debug'));
+**/
+if (!app.get('production')) {
+  app.use('/debug', require('./debug'));
+}
 
 app.use('/', routes);
 

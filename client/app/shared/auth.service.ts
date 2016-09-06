@@ -1,98 +1,111 @@
 import { Injectable, Inject, forwardRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { Http, Headers } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/publishLast';
 
 import { User, NavService } from '../shared/index';
 
 @Injectable()
 export class AuthService {
-	private apiBase = 'api/auth/';
+  private apiBase = 'api/auth/';
 
-	constructor(
-		private http: Http,
-		/** Super duper solution: http://stackoverflow.com/questions/35117029/injecting-services-into-services-in-angular2
-			http://blog.thoughtram.io/angular/2015/09/03/forward-references-in-angular-2.html
-		**/
-		private navService: NavService
-	) { }
+  private _loggedInUser: Observable<any> = null;
 
-	redirectUrl: string;
+  redirectUrl: string;
 
-	login(user: Object): Promise<Object> {
-		let headers = new Headers({
-			'Content-Type': 'application/json'
-		});
+  constructor(
+    private router: Router,
+    private http: Http,
+    /**
+      Super duper solution - forward refs: http://stackoverflow.com/questions/35117029/injecting-services-into-services-in-angular2
+      http://blog.thoughtram.io/angular/2015/09/03/forward-references-in-angular-2.html
+    **/
+    private navService: NavService
+  ) {
+  }
 
-		return this.http.post(this.apiBase + 'login', JSON.stringify(user), {headers: headers})
-			.toPromise()
-			.then(response => this.handleAuthResponse(response))
-			.catch(this.handleError);
-	}
+  
+  login(user: Object): Promise<any> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
 
-	signup(user: Object): Promise<Object> {
-		let headers = new Headers({
-			'Content-Type': 'application/json'
-		});
+    return this.http.post(this.apiBase + 'login', JSON.stringify(user), {headers: headers})
+    .toPromise()
+    .then(response => this.handleLoginResponse(response))
+    .catch(this.handleError);
+  }
 
-		return this.http.post(this.apiBase + 'signup', JSON.stringify(user), {headers: headers})
-			.toPromise()
-			.then(response => this.handleAuthResponse(response))
-			.catch(this.handleError);
-	}
 
-	getLoggedInUser(): Promise<Object> {
-		return this.http.get(this.apiBase + 'loggedinuser')
-		.toPromise()
-		.then(response => response.json())
-		.catch(this.handleError);
-	}
+  signup(user: Object): Promise<any> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
 
-	// temporary workaround for profile-edit component
-	getLoggedInUser2(): Promise<Object> {
-		return this.http.get(this.apiBase + 'loggedinuser2')
-		.toPromise()
-		.then(response => response.json())
-		.catch(this.handleError);
-	}
+    return this.http.post(this.apiBase + 'signup', JSON.stringify(user), {headers: headers})
+    .toPromise()
+    .then(response => this.handleLoginResponse(response))
+    .catch(this.handleError);
+  }
 
-	getLoggedInUserObservable(): Observable<Object> {
-		return this.http.get(this.apiBase + 'loggedinuser')
-			.map((res) => res.json())
-			.catch(this.handleObservableError);
-	}
 
-	testRoute(): Promise<Object> {
-		return this.http.get(this.apiBase + 'testroute')
-		.toPromise()
-		.then(response => response.json())
-		.catch(this.handleError);
-	}
+  getLoggedInUser(): Observable<any> {
+    if (!this._loggedInUser) {
+      this._loggedInUser = this.http.get(this.apiBase + 'logged-in-user')
+      .map((res) => res.json())
+      .publishLast() // caching: http://www.syntaxsuccess.com/viewarticle/caching-with-rxjs-observables-in-angular-2.0
+      .refCount()
+      .catch(this.handleObservableError);
+    }
 
-	logout(): Promise<void> {
-		return this.http.get(this.apiBase + 'logout')
-			.toPromise()
-			.then(response => response.json())
-			.catch(this.handleError);
-	}
+    return this._loggedInUser; 
+  }
 
-	private handleAuthResponse(response: any) {
-		console.log(response);
-		return response.json();
-	}
 
-	private handleObservableError(error: any) {
-		let errMsg = (error.message) ? error.message :
-			error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-		console.error(errMsg); // log to console instead
-		return Observable.throw(errMsg);
-	}
+  logout(): Promise<any> {
+    return this.http.get(this.apiBase + 'logout')
+    .toPromise()
+    .then(response => {
+      if (response.ok) {
+        this._loggedInUser = null;
+        this.navService.changeMessage('Successfully logged out. See you next time!');
+      } else {
+        this.navService.changeMessage('Error logging out!');
+      }
+      return response;
+    })
+    .catch(this.handleError);
+  }
 
-	private handleError(error: any) {
-		console.error('An error occurred', error);
-		return Promise.reject(error.message || error);
-	}
+
+  private handleLoginResponse = (response: any) => {
+    response = response.json();
+      if (response.ok) {
+        this._loggedInUser = null;
+        this.navService.logIn(response.data);
+        this.navService.queueMessage('Welcome, ' + response.data.username);
+        this.router.navigateByUrl('/');
+      } else {
+        this.navService.changeMessage(response.error);
+      }
+  }
+
+
+  private handleObservableError(error: any) {
+    let errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+      console.error(errMsg);
+    return Observable.throw(errMsg);
+  }
+
+
+  private handleError(error: any) {
+    console.error('An error occurred', error);
+    return Promise.reject(error.message || error);
+  }
 
 }

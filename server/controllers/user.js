@@ -4,44 +4,42 @@ var User = require('../models/user');
 var trimUserObject = require('../controllers').trimUserObject;
 
 exports.list = function(req, res) {
-  User.find({})
-  .then(users => {
-    for (var i = 0; i < users.length; i++) {
-      users[i] = trimUserObject(users[i]);
-    }
-    res.json({users: users})
-  })
-  .catch(err => res.send(err));
+  User.find({}).exec()
+    .then(users => {
+      for (var i = 0; i < users.length; i++) {
+        users[i] = trimUserObject(users[i]);
+      }
+      res.json({ ok: true, data: users });
+    })
+    .catch(error => res.json({ ok: false, error: error.toString() }));
 };
 
-exports.findUserByUsername = function(req, res) {
-  User.findOne({username: req.params.username})
+
+exports.findByUsername = function(req, res) {
+  User.findOne({username: req.params.username}).exec()
     .then(user => {
       user = trimUserObject(user);
-      res.json({user: user});
+      res.json({ ok: true, data: user });
     })
-    .catch(() => {
-      var err = 'Cannot find user ' + req.params.id;
-      res.send(err);
-    });
+    .catch(error => res.json({ ok: false, error: error.toString() }));
 }
 
+
 exports.read = function(req, res) {
-  User.findById(req.params.id)
+  User.findById(req.params.id).exec()
     .then(user => {
+      if (!user) {
+        return res.json({ ok: false, error: 'Could not find user ' + req.params.id})
+      }
       user = trimUserObject(user);
-      res.json({user: user});
+      res.json({ ok: true, data: user });
     })
-    .catch(() => {
-      var err = 'Cannot find user ' + req.params.id;
-      res.send(err);
-    });
+    .catch(error => res.json({ ok: false, error: error.toString() }));
 };
 
-exports.update = function(req, res) {
-  console.log('req.body: ' + JSON.stringify(req.body));
 
-  User.findById(req.params.id)
+exports.update = function(req, res) {
+  User.findById(req.params.id).exec()
     .then(user => {
       for (var property in req.body) {
         user[property] = req.body[property];
@@ -50,36 +48,33 @@ exports.update = function(req, res) {
         if (property === 'password' && user[property] !== "")
           user['password'] = bcrypt.hashSync(user['password']);
       }
-      // returning user.save().exec() - an actual promise, doesn't work here
+
+      // this is a pure ES6 promise, so we don't have to call .exec()
       return user.save();
     })
-    .then(user => res.json({update_ok: true}))
-    .catch(err => res.send({update_ok: false, err: err}));
+    .then(() => res.json({ ok: true }))
+    .catch(error => res.json({ ok: false, error: error.toString() }));
 };
 
 exports.delete = function(req, res) {
-  User.findByIdAndRemove(req.params.id, function(error, user) {
-    if (error) {
-      res.send(err);
-    }
-    else
-      res.json('delete success');
-  });
+  User.findByIdAndRemove(req.params.id).exec()
+    .then(() => res.json({ ok: true }))
+    .catch(error => res.json({ ok: false, error: error.toString() }));
 }
+
 
 exports.promoteToAdmin = function(req, res) {
   if (req.params.password !== 'topsecret') {
-    res.json('incorrect promotion password!');
-    return;
+    return res.send('incorrect promotion password!');
   }
 
-  User.findById(req.params.id)
-    .then(user => {
+  User.findById(req.params.id).exec()
+    .then((user) => {
       user.admin = true;
-      user.save()
-        .then(user => res.json(user));
+      return user.save();
     })
-    .catch(err => res.send(err));
+    .then(() => res.json({ ok: true }))
+    .catch(error => res.json({ ok: false, error: error.toString() }));
 }
 
 exports.demoteAdmin = function(req, res) {
@@ -88,7 +83,7 @@ exports.demoteAdmin = function(req, res) {
     return;
   }
 
-  User.findById(req.params.id)
+  User.findById(req.params.id).exec()
     .then(user => {
       user.admin = false;
       user.save()

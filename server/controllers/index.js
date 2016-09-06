@@ -1,5 +1,7 @@
 var trimUserObject = require('./trimUserObject');
+var checkRequiredFields = require('./checkRequiredFields');
 
 module.exports = {
-  trimUserObject: trimUserObject
+  trimUserObject: trimUserObject,
+  checkRequiredFields: checkRequiredFields
 }

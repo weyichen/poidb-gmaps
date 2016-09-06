@@ -36,24 +36,13 @@ export class LoginComponent implements OnInit {
   login() {
     this.authService
       .login(this.user)
-      .then(response => this.handleAuthResponse(response))
       .catch(error => this.error = error);
   }
 
   signUp() {
     this.authService
       .signup(this.user)
-      .then(response => this.handleAuthResponse(response))
       .catch(error => this.error = error);
   }
 
-  private handleAuthResponse(response: any) {
-    if (response.logged_in) {
-      this.navService.logIn(response.user);
-      this.navService.queueMessage('Welcome, ' + response.user.username);
-      this.router.navigateByUrl('/');
-    } else {
-      this.navService.changeMessage(response.error);
-    }
-  }
 }

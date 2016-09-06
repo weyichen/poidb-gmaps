@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var user = require('../controllers/user');
+//var isAuthorized = require('./isAuthorized');
 
 // check if the page belongs to the logged in user
 router.use('/:id', function(req, res, next) {
@@ -26,7 +27,7 @@ var isAuthorized = function(req, res, next) {
 
 // When called from a middleware, the mount point (/api/user) is not included in req.path
 router.get('/list', user.list);
-router.get('/username/:username', user.findUserByUsername);
+router.get('/username/:username', user.findByUsername);
 router.get('/:id', user.read);
 router.put('/:id', isAuthorized, user.update);
 router.delete('/:id', isAuthorized, user.delete);

@@ -30,12 +30,16 @@ export class UsersComponent implements OnInit {
 		this.navService.changeTitle('Users');
 
 		this.getUsers();
-		this.selectedUser = this.authService.getLoggedInUser();
+		this.authService.getLoggedInUser()
+		.subscribe((user: any) => {
+			this.selectedUser = user;
+		})
+		//.catch(error => console.error(error));
 	}
 
 	getUsers() {
 		this.userService.list()
-		.then(users => this.users = users)
+		.then((users: any) => this.users = users);
 	}
 
 	getUser(id: string) {

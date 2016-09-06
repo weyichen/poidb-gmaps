@@ -2,6 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
 
+var MSG = require('../config/messages');
 var User = require('../models/user');
 var trimUserObject = require('../controllers').trimUserObject;
 
@@ -14,41 +15,44 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, trimUserObject(user));
-  });
+  User.findById(id)
+    .then((user) => done(null, trimUserObject(user)))
+    .catch((err) => done(err));
 });
+
 
 passport.use('login', new LocalStrategy({
   passReqToCallback: true
 },
   function(req, username, password, done) {
-    console.log("authenticating as " + username);
-    User.findOne({ 'username': username }, function (err, user) {
-      if (err)
-        return done(err);
-      if (!user)
-        return done(null, false, req.flash('authError', 'You are not yet registered.'));
-      if (!bcrypt.compareSync(password, user.password))
-        return done(null, false, req.flash('authError', 'Incorrect username or password.'));
-      return done(null, user);
-    });
+    console.log("Authenticating as " + username);
+    User.findOne({ 'username': username }).exec() // queries return promises with .exec()
+      .then((user) => {
+        if (!user)
+          return done(null, false, req.flash('authError', MSG.LOGIN_NOT_REGISTERED));
+        if (!bcrypt.compareSync(password, user.password))
+          return done(null, false, req.flash('authError', MSG.LOGIN_INCORRECT_CREDENTIALS));
+        return done(null, user);
+      })
+      .catch((err) => done(err));
   }
 ));
+
 
 passport.use('signup', new LocalStrategy({
   passReqToCallback: true
 },
   function(req, username, password, done) {
-    console.log("registering as " + username);
-    User.create({ 'username': username, 'password': bcrypt.hashSync(password) }, function (err, user) {
-      if (err) {
+    console.log("Registering as " + username);
+    User.create({ 'username': username, 'password': bcrypt.hashSync(password) }) // async operations return promises
+      .then((user) => {
+        console.log('Registered as ' + user.username);
+        return done(null, user);   
+      })
+      .catch((err) => {
         if (err.code === 11000) // handle duplicates
-          return done(null, false, req.flash('authError', 'This username has been taken. Please try another.'));
+          return done(null, false, req.flash('authError', MSG.SIGNUP_USERNAME_TAKEN));
         return done(err);
-      }
-      console.log('Registered as ' + user.username);
-      return done(null, user);
-    });
+      });
   }
 ));

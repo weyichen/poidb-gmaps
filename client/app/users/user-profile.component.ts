@@ -32,9 +32,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.navigated = true;
         this.userService.get(id)
           .then(user => {
-            this.user = user;
-            this.navService.changeTitle('Editing user ' + user.username);
-          });
+            if (user) {
+              this.user = user;
+              this.navService.changeTitle('Editing user ' + user.username);
+            }
+          })
+          .catch((error) => console.error(error));
       } else {
         this.navigated = false;
         this.user = null;

@@ -46,7 +46,7 @@ export class NavService {
 
     return messageString;
   }
-
+  
 
   logIn(user: Object) {
     this.loggedInSource.next(user);
