@@ -5,7 +5,7 @@ import { AuthService, NavService } from '../shared/index';
 
 @Component({
   selector: 'user-login',
-  templateUrl: 'client/app/auth/login.component.html',
+  templateUrl: './login.component.html',
   styles: []
 })
 

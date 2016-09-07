@@ -1,29 +1,17 @@
+<!DOCTYPE html>
 <html>
   <head>
     <base href="/">
-    <title>Angular 2 QuickStart</title>
+    <title>Angular With Webpack</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
-    <!-- <link rel="stylesheet" href="static/css/styles.css"> -->
-
-    <!-- 1. Load libraries -->
-     <!-- Polyfill(s) for older browsers -->
-     <script src="static/vendor/js/shim.min.js"></script>
-     <script src="static/vendor/js/zone.js"></script>
-     <script src="static/vendor/js/Reflect.js"></script>
-     <script src="static/vendor/js/system.js"></script>
-
-    <!-- 2. Load minified bundle for production -->
-    <script src="static/js/bundle.min.js"></script>
-    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvUckSK2b49tAQH4xwY-ZLFwQmr2Q6VGA"></script>
-  </head>
-  <!-- 3. Display the application -->
+  <link href="app.css" rel="stylesheet"></head>
   <body>
     <my-app><div class="mdl-spinner mdl-js-spinner is-active"></div></my-app>
-  </body>
+  <script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="app.js"></script></body>
 </html>

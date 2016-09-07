@@ -5,7 +5,7 @@ import { UserService, AuthService, NavService } from '../shared/index';
 
 @Component({
   selector: 'profile-edit',
-  templateUrl: 'client/app/users/profile-edit.component.html',
+  templateUrl: './profile-edit.component.html',
   styles: []
 })
 

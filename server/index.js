@@ -46,9 +46,7 @@ mongoose.connect(CF.MONGODB_URI, function (err) {
 /**
   ** MIDDLEWARE **
 **/
-app.use('/static', express.static(__dirname + '/../public'));
-app.use('/client', express.static(__dirname + '/../client'));
-app.use('/node_modules', express.static(__dirname + '/../node_modules'));
+app.use('/', express.static(path.join(__dirname, '/../dist')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -83,7 +81,7 @@ app.use('/', routes);
 app.get('*', function(req, res) {
   // ignore requests for non-existent files
   if (!path.extname(req.path)) {
-    res.sendFile(indexFile, {root: __dirname + '/../public/'});
+    res.sendFile(indexFile, {root: __dirname + '/../dist'});
   }
   else {
     res.status(404).end();

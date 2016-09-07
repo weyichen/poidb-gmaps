@@ -15,8 +15,8 @@ import { MapService } from './map.service';
 
 @Component({
 	selector: 'app-maps',
-	templateUrl: 'client/app/map/map.component.html',
-	styleUrls: ['client/app/map/map.component.css']
+	templateUrl: './map.component.html',
+	styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, OnDestroy {
 	private noMapMode = false;

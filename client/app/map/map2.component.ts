@@ -20,8 +20,8 @@ import { MapService } from './map.service';
 
 @Component({
 	selector: 'app-maps',
-	templateUrl: 'client/app/map/map2.component.html',
-	styleUrls: ['client/app/map/map.component.css']
+	templateUrl: './map2.component.html',
+	styleUrls: ['./map.component.css']
 })
 export class Map2Component implements OnInit, OnDestroy, AfterViewInit {
 	private noMapMode = false;
@@ -38,7 +38,7 @@ export class Map2Component implements OnInit, OnDestroy, AfterViewInit {
 	sub: any;
 	navigated = false;
 
-	mapId = '57b369cd451959ec28d90056';
+	// mapId = '57b369cd451959ec28d90056';
 
 	/**
 		think of the ViewChildren: http://blog.mgechev.com/2016/01/23/angular2-viewchildren-contentchildren-difference-viewproviders/

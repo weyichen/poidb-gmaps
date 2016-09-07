@@ -6,7 +6,7 @@ import { AuthService, NavService } from '../shared/index';
 
 @Component({
   selector: 'app-nav',
-  templateUrl: 'client/app/nav/nav.component.html'
+  templateUrl: './nav.component.html'
 })
 export class NavComponent implements OnInit {
   private defaultTitle = 'My First Angular 2 + Express App!';
