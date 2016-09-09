@@ -26,7 +26,7 @@ app.set('view engine', 'ejs');
 
 var indexFile;
 if (app.get('production')) {
-  indexFile = "index.min.html";
+  indexFile = "index.html";
 } else {
   indexFile = 'index.html';
 }
