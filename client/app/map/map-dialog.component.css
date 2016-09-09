@@ -1,0 +1,29 @@
+.title-bar {
+  margin-bottom: 15px;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.close {
+  float: right;
+  font-size: 18px;
+}
+
+.description {
+  max-height: 250px;
+  overflow: auto;
+  margin-bottom: 15px;
+}
+
+textarea {
+  width: 98%;
+  height: 230px;
+}
+
+.location-toolbar {
+  float: right;
+  display: inline-block;
+}
+

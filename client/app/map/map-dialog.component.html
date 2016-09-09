@@ -1,0 +1,26 @@
+<div class="title-bar">
+  <span *ngIf="!editMode" class="title" >{{location.title}}</span>
+  <input *ngIf="editMode" [(ngModel)]="location.title" type="text" class="text-input" placeholder="Title" />
+  <span class="close"><i (click)="close()" class="material-icons">clear</i></span>
+</div>
+
+<div class="description">
+  <span *ngIf="!editMode" class="description-text">{{location.description}}</span>
+  <textarea *ngIf="editMode" [(ngModel)]="location.description"></textarea>
+</div>
+
+<div *ngIf="!editMode">
+  <span class="coordinates">
+    <i (click)="edit()" class="material-icons" >place</i>
+    {{location.lat | number:'1.5-5'}}, {{location.lng | number:'1.5-5'}}
+  </span>
+  <span class="location-toolbar">
+    <i (click)="edit()" class="material-icons" >mode_edit</i>
+    <i (click)="delete()" class="material-icons">delete</i>
+  </span>
+</div>
+
+<div *ngIf="editMode">
+  <button (click)="save()">Save</button>
+  <button (click)="cancel()">Cancel</button>
+</div>

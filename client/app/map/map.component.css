@@ -1,14 +1,22 @@
-ul {
+ul.location-list {
   list-style-type: none;
   background: #3399ff;
   padding: 2px;
 }
 
-li {
+li.location-item {
   background: #cce5ff;
   margin: 5px;
   padding: 5px;
 }
+
+li.location-item:hover {
+  background: #ffaaaa;
+}
+li.location-item.selected {
+  background: #ffaaaa;
+}
+
 
 input, textarea{
   background-color: transparent;
@@ -18,8 +26,6 @@ input, textarea{
 }
 
 .column {
-  float: left;
-  height: 100%;
 }
 
 .coordinates {
@@ -31,16 +37,27 @@ input, textarea{
 }
 
 #mapContainer {
-  width: 60%;
-  height: 100vh;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+#mapDialog {
+  position: absolute;
+  width: 350px;
+  max-height: 350px;
+  overflow: hidden;
+  padding: 10px;
+  z-index: 1;
+  background-color: #FFFFFF;
 }
 
 #locList {
-  width: 40%;
-}
-
-#newLocation {
-  background: #ffaaaa;
+  position: absolute;
+  left: 2%;
+  width: 20%;
+  z-index: 10;
 }
 
 #titleInput {

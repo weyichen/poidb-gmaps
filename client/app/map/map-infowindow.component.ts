@@ -21,7 +21,6 @@ export class MapInfowindow implements OnInit, OnDestroy {
 		if (this.infoWindow) {
 			this.infoWindow.close();
 		}
-
 		var iW = new google.maps.InfoWindow();
 		iW.setContent(t);
 		iW.addListener('closeclick', 
