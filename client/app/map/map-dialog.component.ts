@@ -18,6 +18,10 @@ export class MapDialog implements OnInit, OnDestroy {
 
   @Input() 
   set mapPosition(mP: any) {
+    if (mP === undefined) {
+      mP = {x: 200, y: 200};
+    }
+
     // it's NO GOOD to put 10 decimal places in CSS
     this.left = Math.round(mP.x) + 'px';
     this.top = Math.round(mP.y) + 'px';

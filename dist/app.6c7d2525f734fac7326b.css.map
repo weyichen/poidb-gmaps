@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///webpack:///client/assets/css/styles.css"],"names":[],"mappings":"AAEA,UACE,WAAa","file":"app.6c7d2525f734fac7326b.css","sourcesContent":["/* Master Styles */\n\nhtml, body {\n  height: 100%;\n}\n\n\n\n/** WEBPACK FOOTER **\n ** webpack:///client/assets/css/styles.css\n **/"],"sourceRoot":""}

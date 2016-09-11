@@ -1,54 +1,43 @@
-<div id="mapContainer" class="column">
-	<img src="http://ichef.bbci.co.uk/wwhp/624/cpsprodpb/13B96/production/_90809708_gettyimages-88996304.jpg">
+<app-map-marker *ngFor="let location of mapObject?.locations; let i = index"
+  [googleMap]="googleMap"
+  [location]="{lat: location.lat, lng: location.lng}"
+  [title]="location.title"
+  [index]="i"
+  [selected]="i===selectedLocation"
+  (onClick)="markerClicked($event)"
+  (onDrag)="markerDragged($event)">
+</app-map-marker>
+
+<div *ngIf="mapObject" id="sidebar">
+  <div class="sidebar-element" id="map-title">{{mapObject.title}}</div>
+  <div class="sidebar-element" id="map-toolbar">
+    <i (click)="saveMap()" class="material-icons">done</i>Save
+    <i (click)="panMode()" class="material-icons">pan_tool</i>
+    <i (click)="addMode()" class="material-icons">add_location</i>
+  </div>
+
+  <ul class="sidebar-element" id="location-list">
+    <li *ngFor="let location of mapObject.locations; let i = index"
+      class="location-item"
+      [class.selected]="i===selectedLocation">
+      <div (click)="selectLocation(i)" class="location-title">
+        <i class="material-icons location-icon">place</i>
+        {{location.title}}
+      </div>
+    </li>
+  </ul>
 </div>
 
-
-<div id="locList" class="column" *ngIf="mapObject">
-	<button (click)="saveMap()">Save Map</button>
-
-	<ul>
-		<li *ngIf="newLocation" id="newLocation">
-			<div>   
-				<span class="title"><input [(ngModel)]="newLocation.title" type="text" id="titleInput" placeholder="Title" /></span>
-				<span class="coordinates">{{newLocation.lat}}, {{newLocation.lng}}</span>
-			</div>
-			<div>
-				<textarea [(ngModel)]="newLocation.description" id="descriptionInput"></textarea>
-			</div>
-			<div>
-				<button (click)="saveNewLocation()">Save</button>
-				<button (click)="cancelNewLocation()">Discard</button>
-			</div>
-		</li>
-
-		<li *ngFor="let location of mapObject.locations; let i = index">
-			<div *ngIf="!editMode || selectedLocation!==i">
-				<div (click)="selectLocation(i)">
-					{{i+1}}.
-					<span class="title">{{location.title}}</span> 
-					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
-				</div>
-				<div class="description" *ngIf="selectedLocation===i">{{location.description}}</div>
-				<div>
-					<button (click)="editLocation(i)">Edit</button>
-					<button (click)="removeLocation(i)">Remove</button>
-				</div>
-			</div>
-
-			<div *ngIf="editMode && selectedLocation===i">
-				<div>   
-					<span class="title"><input [(ngModel)]="location.title" type="text" id="titleInput" placeholder="Title" /></span>
-					<span class="coordinates">{{location.lat}}, {{location.lng}}</span>
-				</div>
-				<div>
-					<textarea [(ngModel)]="location.description" id="descriptionInput"></textarea>
-				</div>
-				<div>
-					<button (click)="saveLocation(i)">Save</button>
-					<button (click)="cancelEdit()">Discard</button>
-				</div>
-			</div>
-
-		</li>
-	</ul>
+<div #mapContainer id="mapContainer">
 </div>
+
+<app-map-dialog id="mapDialog"
+  *ngIf="selectedLocation!==null"
+  [location]="mapObject?.locations[selectedLocation]"
+  [mapPosition]="dialogPosition"
+  (onClose)="dialogClosed()"
+  (onDelete)="dialogDeleted()"
+  (onSave)="dialogSaved($event)">
+</app-map-dialog>
+
+    
