@@ -8,6 +8,10 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run webpack\" \"nodemon server/index.js\"",
+<<<<<<< Updated upstream
+=======
+    "build": "rimraf dist && PRODUCTION=true npm run start",
+>>>>>>> Stashed changes
     "webpack": "webpack --progress --colors --watch",
     "start-old": "concurrently \"tsc -w -p ./client\" \"nodemon ./server/index.js\" ",
     "bundle:prod": "node builder.js"
