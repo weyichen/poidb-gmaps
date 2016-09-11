@@ -10,9 +10,7 @@
     "start": "concurrently \"npm run webpack\" \"nodemon server/index.js\"",
     "build": "PRODUCTION=true npm run start",
     "webpack": "webpack --progress --colors --watch",
-
-    "start-old": "concurrently \"tsc -w -p ./client\" \"nodemon ./server/index.js\" ",
-    "bundle:prod": "node builder.js"
+    "postinstall": "npm run webpack"
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.6",
