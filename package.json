@@ -10,7 +10,8 @@
     "start": "concurrently \"npm run webpack\" \"nodemon server/index.js\"",
     "build": "rimraf dist && PRODUCTION=true npm run start",
     "webpack": "webpack --progress --colors --watch",
-    "postinstall": "rimraf dist && webpack"
+    "postinstall": "rimraf dist && npm run typings-install && webpack",
+    "typings-install": "cd client && typings install && cd .."
   },
   "dependencies": {
     "@angular/common": "2.0.0-rc.6",
