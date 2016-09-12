@@ -8,9 +8,9 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run webpack\" \"nodemon server/index.js\"",
-    "build": "rimraf dist && PRODUCTION=true npm run start",
+    "build": "rimraf dist && webpack --config client/webpack.prod.js --progress --profile",
     "webpack": "webpack --progress --colors --watch",
-    "postinstall": "rimraf dist && npm run typings-install && webpack",
+    "postinstall": "rimraf dist && npm run typings-install && webpack --config client/webpack.prod.js --progress --profile",
     "typings-install": "cd client && typings install && cd .."
   },
   "dependencies": {
@@ -28,17 +28,13 @@
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.2.1",
     "cookie-parser": "^1.4.3",
-    "cool-ascii-faces": "1.3.4",
     "core-js": "^2.4.1",
     "ejs": "2.4.1",
-    "element-resize-event": "^2.0.5",
     "express": "4.13.3",
     "express-session": "^1.13.0",
-    "express-stormpath": "^3.1.2",
     "mongoose": "^4.6.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "pg": "4.x",
     "reflect-metadata": "^0.1.3",
     "rxjs": "5.0.0-beta.11",
     "zone.js": "^0.6.17",
@@ -59,21 +55,15 @@
     "webpack-merge": "^0.14.0"
   },
   "devDependencies": {
-    
-    "awesome-typescript-loader": "^2.2.3",
     "concurrently": "^2.0.0",
-    
-    
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-jasmine": "^0.3.8",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
-    
     "phantomjs-prebuilt": "^2.1.7",
     "webpack-dev-server": "^1.14.1"
-    
   },
   "license": "MIT"
 }

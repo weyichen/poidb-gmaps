@@ -17,7 +17,7 @@ var routes = require('./routes');
   ** CONFIG **
 **/
 const CF = require('./config');
-app.set('production', process.env.PRODUCTION || CF.PRODUCTION_MODE);
+app.set('ENV', process.env.ENV || CF.PRODUCTION_MODE);
 app.set('port', process.env.PORT || CF.PORT);
 
 app.set('views', __dirname + '/../public');
@@ -25,7 +25,7 @@ app.set('view engine', 'ejs');
 
 
 var indexFile;
-if (app.get('production')) {
+if (app.get('ENV') === 'production') {
   indexFile = "index.html";
 } else {
   indexFile = 'index.html';
@@ -71,7 +71,7 @@ app.use(flash());
 /**
   ** ROUTES **
 **/
-if (!app.get('production')) {
+if (app.get('ENV') !== 'production') {
   app.use('/debug', require('./debug'));
 }
 

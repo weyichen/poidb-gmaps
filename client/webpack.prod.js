@@ -4,6 +4,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var commonConfig = require('./webpack.common.js');
 
+const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+
 module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map', // other options: cheap-module-eval-source-map  eval
 
@@ -28,7 +30,7 @@ module.exports = webpackMerge(commonConfig, {
     new ExtractTextPlugin('[name].[hash].css'),
     new webpack.DefinePlugin({
       'process.env': {
-        'PRODUCTION': process.env.PRODUCTION
+        'ENV': JSON.stringify(ENV)
       }
     })
   ]
