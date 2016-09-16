@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Angular 2 Quickstart on an Express Server",
   "engines": {
-    "node": "5.9.1"
+    "node": "6.5.0"
   },
   "main": "index.js",
   "scripts": {
